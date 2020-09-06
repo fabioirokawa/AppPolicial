@@ -10,6 +10,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private Button camera;
     private Button historico;
+    private Button historico2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
