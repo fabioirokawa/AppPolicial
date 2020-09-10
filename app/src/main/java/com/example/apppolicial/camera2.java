@@ -22,6 +22,8 @@ public class camera2 extends AppCompatActivity {
         setContentView(R.layout.activity_camera2);
 
         Button button = findViewById(R.id.bPhoto);
+        Button button2 = findViewById(R.id.bCamHist);
+        Button button3 = findViewById((R.id.bPerfil));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +33,20 @@ public class camera2 extends AppCompatActivity {
 
                 startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), 1);
 
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToHist();
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPerf();
             }
         });
 
@@ -53,4 +69,15 @@ public class camera2 extends AppCompatActivity {
             }
         }
     }
+
+    public void goToHist(){
+        Intent intent = new Intent (this, historico.class);
+        startActivity(intent);
+    }
+
+    public void goToPerf(){
+        Intent intent = new Intent (this, perfil.class);
+        startActivity(intent);
+    }
+
 }
