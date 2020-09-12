@@ -1,4 +1,4 @@
-package com.example.wifitransfers;
+package com.example.apppolicial;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -18,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +28,6 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
-    private BufferedReader in = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +39,19 @@ public class MainActivity extends AppCompatActivity {
             requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
         }//Verifica se app já tem permissão para gravar arquivos
 
-
-
-        Thread myThread = new Thread(new MyServer());
+        Thread myThread = new Thread(new MyServer(this));
         myThread.start();//Inicaia thread de conexão via socket
     }
-
-
 
     class MyServer implements  Runnable{
         ServerSocket ss;
         Socket mySocket;
         Handler handler = new Handler();//Usado para acessar a thread principal
+        Context context;
+
+        MyServer(Context c){
+            context = c;
+        }
 
         @Override
         public void run() {
@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
                     mySocket = ss.accept();
                     InputStream is = mySocket.getInputStream();
                     System.out.println("Conectado");
-
+                    NotifyAlert notifyAlert = new NotifyAlert();
+                    notifyAlert.sendOnChannel1(context);
                     if (is!= null) {
                         FileOutputStream fos = null;
                         BufferedOutputStream bos = null;
@@ -90,12 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
                                     if(imgFile.exists()){
                                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                        ImageView myImage = (ImageView) findViewById(R.id.imageviewTest);
+                                        ImageView myImage = (ImageView) findViewById(R.id.imageViewT);
                                         myImage.setImageBitmap(myBitmap);
                                     }
                                 }
                             });
-                            ss.close();
                             bos.flush();
                             bos.close();
                             Log.i("IMSERVICE", "FILERECCC-2");
@@ -104,32 +104,17 @@ public class MainActivity extends AppCompatActivity {
                             // Do exception handling
                         }
                     }
-/*Transfere mesagem-------------------------------------------------------
-                    System.out.println("Conectando");
-                    mySocket = ss.accept();
-                    in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-                    try {
-                        String message = "";
-                        int charsRead = 0;
-                        char[] buffer = new char[4096];
-
-                        while ((charsRead = in.read(buffer)) != -1) {
-                            message += new String(buffer).substring(0, charsRead);
-                        }
-                        System.out.println(message);
-                    } catch (IOException e) {
-
-                    }
---------------------------------------------------------------------------*/
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            try {
+                ss.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
-
 
     private void requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -167,4 +152,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 }
