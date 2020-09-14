@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ public class camera2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera2);
+        final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
+
 
         Button button = findViewById(R.id.bPhoto);
         Button button2 = findViewById(R.id.bCamHist);
@@ -29,7 +33,8 @@ public class camera2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
+                //intent.setType("download/*");
+                intent.setDataAndType(selectedUri, "image/*");
 
                 startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), 1);
 
