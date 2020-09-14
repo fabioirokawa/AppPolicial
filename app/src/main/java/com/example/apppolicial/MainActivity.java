@@ -32,7 +32,6 @@ import java.sql.SQLOutput;
 
 public class MainActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
-    private BufferedReader in = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,24 +133,26 @@ public class MainActivity extends AppCompatActivity {
 
 							if(imgFileFrame.exists()) {
 								Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
-								ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
+								ImageView imageViewFrame = findViewById(R.id.imageFrame);
 								imageViewFrame.setImageBitmap(bitmapFrame);
 							}
 							if (imgFileFaceCrop.exists()){
 								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
-								ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
+								ImageView imageViewFaceCrop = findViewById(R.id.imageFaceCrop);
 								imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
 							}
 							if (imgFileMatchDataset.exists()){
 								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
-								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
+								ImageView imageViewMatchDataset = findViewById(R.id.imageMatchDataset);
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
 							}
 
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
+							textViewName.setText(R.string.name_main);
 							textViewName.append(mensagemSeparada[0]);
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
+							textViewName.setText(R.string.accuracy_main);
 							textViewAccuracy.append(mensagemSeparada[2]);
 
 
@@ -183,9 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
 					bytesRead = is.read(aByte);
 					Log.i("[INFO]", "bytesRead lenght: " + bytesRead);
-					String message = new String(aByte).substring(0, bytesRead);
-					message = message.substring(0, message.indexOf("\0"));
-					Log.i("[INFO]", "Bytes content: " + message);
+
 
 
 					fos = new FileOutputStream(path);
