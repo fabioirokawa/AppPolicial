@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Socket mySocket;
         Handler handler = new Handler();//Usado para acessar a thread principal
         Context context;
+		File fileWithinMydir;
 
         MyServer(Context c){
             context = c;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                ss = new ServerSocket(9700);
+				ss = new ServerSocket(9700);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -75,7 +76,9 @@ public class MainActivity extends AppCompatActivity {
                         FileOutputStream fos = null;
                         BufferedOutputStream bos = null;
                         try {
-                            fos = new FileOutputStream("/storage/emulated/0/DCIM/Camera/000002.bmp");
+                        	File mydir = context.getDir("myDir",Context.MODE_PRIVATE);
+							fileWithinMydir = new File(mydir,"photo.bmp");
+							fos = new FileOutputStream(fileWithinMydir);
                             bos = new BufferedOutputStream(fos);
                             byte[] aByte = new byte[1024];
                             int bytesRead;
@@ -87,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    File imgFile = new  File("/storage/emulated/0/DCIM/Camera/000002.bmp");
+                                    File imgFile = new  File(String.valueOf(fileWithinMydir));
 
                                     if(imgFile.exists()){
                                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                        ImageView myImage = (ImageView) findViewById(R.id.imageViewT);
+                                        ImageView myImage = (ImageView) findViewById(R.id.imageFrame);
                                         myImage.setImageBitmap(myBitmap);
                                     }
                                 }
