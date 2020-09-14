@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -23,18 +22,16 @@ public class NotifyAlert extends Application {
     }
 
     private void createNotificationChannels(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel1 = new NotificationChannel(
-                    CHANNEL_1_ID,
-                    "channel1",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel1.setDescription("this is Channel 1");
+		NotificationChannel channel1 = new NotificationChannel(
+				CHANNEL_1_ID,
+				"channel1",
+				NotificationManager.IMPORTANCE_HIGH
+		);
+		channel1.setDescription("this is Channel 1");
 
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel1);
-        }
-    }
+		NotificationManager manager = getSystemService(NotificationManager.class);
+		manager.createNotificationChannel(channel1);
+	}
 
     public void sendOnChannel1(Context context){
         Uri path =  Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ context.getApplicationContext().getPackageName() + "/" + R.raw.sound);

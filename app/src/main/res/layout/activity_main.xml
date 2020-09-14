@@ -44,7 +44,6 @@
 		android:layout_width="176dp"
 		android:layout_height="176dp"
 		android:layout_marginStart="16dp"
-		android:layout_marginLeft="16dp"
 		android:layout_marginTop="16dp"
 		app:layout_constraintRight_toLeftOf="@+id/imageMatchDataset"
 		app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +61,6 @@
 		android:layout_height="176dp"
 		android:layout_marginTop="16dp"
 		android:layout_marginEnd="16dp"
-		android:layout_marginRight="16dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
 		app:layout_constraintLeft_toRightOf="@+id/imageFaceCrop"
@@ -78,7 +76,6 @@
 		android:textSize="30sp"
 		android:layout_marginTop="40dp"
 		android:layout_marginStart="16dp"
-		android:layout_marginLeft="16dp"
 		app:layout_constraintBottom_toTopOf="@+id/textViewAccuracyMain"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/imageFaceCrop" />
@@ -92,7 +89,6 @@
 		android:textSize="30sp"
 		android:layout_marginTop="24dp"
 		android:layout_marginStart="16dp"
-		android:layout_marginLeft="16dp"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/textViewNameOfSuspectMain" />
 

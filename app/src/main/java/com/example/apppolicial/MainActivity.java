@@ -15,24 +15,30 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
 
 public class MainActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
+    private BufferedReader in = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (!(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
@@ -48,69 +54,126 @@ public class MainActivity extends AppCompatActivity {
         Socket mySocket;
         Handler handler = new Handler();//Usado para acessar a thread principal
         Context context;
-		File fileWithinMydir;
+        byte[] aByte = new byte[1024];
+        int bytesRead;
+        InputStream is;
+		File pathFrame;
+		File pathFaceCrop;
+		File pathMatchDataset;
+		String[] mensagemSeparada;
+		boolean error=false;
 
-        MyServer(Context c){
+		MyServer(Context c){
             context = c;
         }
-
         @Override
         public void run() {
             try {
 				ss = new ServerSocket(9700);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"Waiting for client", Toast.LENGTH_SHORT).show();
-                    }
-                });//Acessa thread principal para exibir mensagem flutuante
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(getApplicationContext(), "Aguardando Conexao", Toast.LENGTH_LONG).show();
+					}
+				});//Acessa thread principal para exibir mensagem flutuante
+			}catch (IOException ex){
+				ex.printStackTrace();
+				error=true;
+			}
 
-                while (true){
-                    System.out.println("Aguardando conexão");//Mesagem mostrada no Logcat
+			NotifyAlert notifyAlert = new NotifyAlert();
+			while (!error){
+				try{
+                    Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
                     mySocket = ss.accept();
-                    InputStream is = mySocket.getInputStream();
-                    System.out.println("Conectado");
-                    NotifyAlert notifyAlert = new NotifyAlert();
-                    notifyAlert.sendOnChannel1(context);
+                    is = mySocket.getInputStream();
+                    Log.i("[INFO]","Conectado");
+
+
                     if (is!= null) {
                         FileOutputStream fos = null;
                         BufferedOutputStream bos = null;
-                        try {
-                        	File mydir = context.getDir("myDir",Context.MODE_PRIVATE);
-							fileWithinMydir = new File(mydir,"photo.bmp");
-							fos = new FileOutputStream(fileWithinMydir);
-                            bos = new BufferedOutputStream(fos);
-                            byte[] aByte = new byte[1024];
-                            int bytesRead;
+                            notifyAlert.sendOnChannel1(context);
 
+                            bytesRead = is.read(aByte);
+                            Log.i("[INFO]","bytesRead lenght: " + bytesRead);
+                            String message = new String(aByte).substring(0, bytesRead);
+                            message = message.substring(0,message.indexOf("\0"));
+							Log.i("[INFO]","Bytes content: " + message);
+
+                            mensagemSeparada = message.split("\n");
+
+                            File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
+                            String nome = mensagemSeparada[0] + mensagemSeparada[2] ;
+                            pathFrame = new File(mydir, nome+".bmp");
+                            pathFaceCrop = new File(mydir,nome+"_face_crop.bmp");
+                            pathMatchDataset = new File(mydir,nome+"_best_match.bmp");
+
+
+                           //Caminho do frame
+                            fos = new FileOutputStream(pathFrame);
+                            bos = new BufferedOutputStream(fos);
                             while ((bytesRead = is.read(aByte)) != -1) {
                                 bos.write(aByte, 0, bytesRead);
                             }
+							//Caminho do face crop
+							fos = new FileOutputStream(pathFaceCrop);
+							bos = new BufferedOutputStream(fos);
+							while ((bytesRead = is.read(aByte)) != -1) {
+								bos.write(aByte, 0, bytesRead);
+							}
+							//Caminho do match dataset
+							fos = new FileOutputStream(pathMatchDataset);
+							bos = new BufferedOutputStream(fos);
+							while ((bytesRead = is.read(aByte)) != -1) {
+								bos.write(aByte, 0, bytesRead);
+							}
 
+							//Coloca tudo no ImageView e TextView
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    File imgFile = new  File(String.valueOf(fileWithinMydir));
+									File imgFileFrame = new  File(String.valueOf(pathFrame));
+									File imgFileFaceCrop = new  File(String.valueOf(pathFaceCrop));
+									File imgFileMatchDataset = new  File(String.valueOf(pathMatchDataset));
 
-                                    if(imgFile.exists()){
-                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                        ImageView myImage = (ImageView) findViewById(R.id.imageFrame);
-                                        myImage.setImageBitmap(myBitmap);
-                                    }
+                                    if(imgFileFrame.exists()) {
+										Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
+										ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
+										imageViewFrame.setImageBitmap(bitmapFrame);
+									}
+                                    if (imgFileFaceCrop.exists()){
+										Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
+										ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
+										imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
+									}
+                                    if (imgFileMatchDataset.exists()){
+										Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
+										ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
+										imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
+
+									}
+
+                                        TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
+                                        textViewName.append(mensagemSeparada[0]);
+
+                                        TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
+                                        textViewAccuracy.append(mensagemSeparada[2]);
+
+
                                 }
                             });
                             bos.flush();
                             bos.close();
-                            Log.i("IMSERVICE", "FILERECCC-2");
+                            mySocket.close();
 
-                        } catch (IOException ex) {
-                            // Do exception handling
-                        }
                     }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                }catch (IOException ex){
+					ex.printStackTrace();
+				}
             }
+
+
             try {
                 ss.close();
             } catch (IOException e) {
