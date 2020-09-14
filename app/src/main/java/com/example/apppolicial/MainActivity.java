@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 		File pathMatchDataset;
 		String[] mensagemSeparada;
 		boolean error=false;
+		NotifyAlert notifyAlert = new NotifyAlert();
+		FileOutputStream fos;
+		BufferedOutputStream bos;
 
 		MyServer(Context c){
             context = c;
@@ -81,96 +84,82 @@ public class MainActivity extends AppCompatActivity {
 				error=true;
 			}
 
-			NotifyAlert notifyAlert = new NotifyAlert();
 			while (!error){
 				try{
+
+					//Recebe mensagem para criacao de estruturas de pastas
                     Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
                     mySocket = ss.accept();
                     is = mySocket.getInputStream();
                     Log.i("[INFO]","Conectado");
 
+                    //Notificacao
+					notifyAlert.sendOnChannel1(context);
 
-                    if (is!= null) {
-                        FileOutputStream fos = null;
-                        BufferedOutputStream bos = null;
-                            notifyAlert.sendOnChannel1(context);
+					if(is!=null) {
+						bytesRead = is.read(aByte);
+						Log.i("[INFO]", "bytesRead lenght: " + bytesRead);
+						String message = new String(aByte).substring(0, bytesRead);
+						message = message.substring(0, message.indexOf("\0"));
+						Log.i("[INFO]", "Bytes content: " + message);
 
-                            bytesRead = is.read(aByte);
-                            Log.i("[INFO]","bytesRead lenght: " + bytesRead);
-                            String message = new String(aByte).substring(0, bytesRead);
-                            message = message.substring(0,message.indexOf("\0"));
-							Log.i("[INFO]","Bytes content: " + message);
+						mensagemSeparada = message.split("\n");
 
-                            mensagemSeparada = message.split("\n");
-
-                            File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
-                            String nome = mensagemSeparada[0] + mensagemSeparada[2] ;
-                            pathFrame = new File(mydir, nome+".bmp");
-                            pathFaceCrop = new File(mydir,nome+"_face_crop.bmp");
-                            pathMatchDataset = new File(mydir,nome+"_best_match.bmp");
-
-
-                           //Caminho do frame
-                            fos = new FileOutputStream(pathFrame);
-                            bos = new BufferedOutputStream(fos);
-                            while ((bytesRead = is.read(aByte)) != -1) {
-                                bos.write(aByte, 0, bytesRead);
-                            }
-							//Caminho do face crop
-							fos = new FileOutputStream(pathFaceCrop);
-							bos = new BufferedOutputStream(fos);
-							while ((bytesRead = is.read(aByte)) != -1) {
-								bos.write(aByte, 0, bytesRead);
-							}
-							//Caminho do match dataset
-							fos = new FileOutputStream(pathMatchDataset);
-							bos = new BufferedOutputStream(fos);
-							while ((bytesRead = is.read(aByte)) != -1) {
-								bos.write(aByte, 0, bytesRead);
-							}
-
-							//Coloca tudo no ImageView e TextView
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-									File imgFileFrame = new  File(String.valueOf(pathFrame));
-									File imgFileFaceCrop = new  File(String.valueOf(pathFaceCrop));
-									File imgFileMatchDataset = new  File(String.valueOf(pathMatchDataset));
-
-                                    if(imgFileFrame.exists()) {
-										Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
-										ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
-										imageViewFrame.setImageBitmap(bitmapFrame);
-									}
-                                    if (imgFileFaceCrop.exists()){
-										Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
-										ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
-										imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
-									}
-                                    if (imgFileMatchDataset.exists()){
-										Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
-										ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
-										imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
-
-									}
-
-                                        TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-                                        textViewName.append(mensagemSeparada[0]);
-
-                                        TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-                                        textViewAccuracy.append(mensagemSeparada[2]);
-
-
-                                }
-                            });
-                            bos.flush();
-                            bos.close();
-                            mySocket.close();
-
-                    }
-                }catch (IOException ex){
+						File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
+						String nome = mensagemSeparada[0] + mensagemSeparada[2];
+						pathFrame = new File(mydir, nome + ".bmp");
+						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
+						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
+					}
+				}catch (IOException ex){
 					ex.printStackTrace();
 				}
+
+
+					//Caminho do frame
+					receiveData(pathFrame);
+					//Caminho do face crop
+					receiveData(pathFaceCrop);
+					//Caminho do match dataset
+					receiveData(pathMatchDataset);
+
+
+					//Coloca tudo no ImageView e TextView
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							File imgFileFrame = new  File(String.valueOf(pathFrame));
+							File imgFileFaceCrop = new  File(String.valueOf(pathFaceCrop));
+							File imgFileMatchDataset = new  File(String.valueOf(pathMatchDataset));
+
+							if(imgFileFrame.exists()) {
+								Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
+								ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
+								imageViewFrame.setImageBitmap(bitmapFrame);
+							}
+							if (imgFileFaceCrop.exists()){
+								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
+								ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
+								imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
+							}
+							if (imgFileMatchDataset.exists()){
+								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
+								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
+								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
+							}
+
+							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
+							textViewName.append(mensagemSeparada[0]);
+
+							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
+							textViewAccuracy.append(mensagemSeparada[2]);
+
+
+						}
+					});
+
+
+
             }
 
 
@@ -180,7 +169,42 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+		private void receiveData(File path){
+
+			try {
+
+				Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
+				Socket mySocket = ss.accept();
+				InputStream is = mySocket.getInputStream();
+				Log.i("[INFO]","Conectado");
+
+				if(is!=null) {
+
+					bytesRead = is.read(aByte);
+					Log.i("[INFO]", "bytesRead lenght: " + bytesRead);
+					String message = new String(aByte).substring(0, bytesRead);
+					message = message.substring(0, message.indexOf("\0"));
+					Log.i("[INFO]", "Bytes content: " + message);
+
+
+					fos = new FileOutputStream(path);
+					bos = new BufferedOutputStream(fos);
+					while ((bytesRead = is.read(aByte)) != -1) {
+						bos.write(aByte, 0, bytesRead);
+					}
+                    bos.flush();
+                    bos.close();
+                    mySocket.close();
+                }
+			}catch (IOException ex){
+				ex.printStackTrace();
+			}
+		}
     }
+
+
+
 
     private void requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
