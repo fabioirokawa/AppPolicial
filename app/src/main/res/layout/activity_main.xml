@@ -9,7 +9,7 @@
 
 	<androidx.appcompat.widget.Toolbar
 		android:id="@+id/toolbar_main"
-		android:layout_width="362dp"
+		android:layout_width="match_parent"
 		android:layout_height="53dp"
 		android:background="?attr/colorPrimary"
 		android:minHeight="?attr/actionBarSize"
@@ -18,14 +18,26 @@
 		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:title="@string/main_title" />
+		app:title="@string/main_title"
+		app:titleTextColor="@android:color/white"/>
+
+	<TextView
+		android:id="@+id/textView3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:layout_marginBottom="16dp"
+		android:text="@string/frame_retrieved_main_image_view_descriptor"
+		app:layout_constraintStart_toStartOf="@id/imageFrame"
+		app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
+		 />
 
 	<ImageView
 		android:id="@+id/imageFrame"
-		android:layout_width="327dp"
-		android:layout_height="160dp"
+		android:layout_width="match_parent"
+		android:layout_height="260dp"
 		android:layout_marginStart="16dp"
-		android:layout_marginTop="32dp"
+		android:layout_marginTop="40dp"
 		android:layout_marginEnd="16dp"
 		android:background="@android:color/darker_gray"
 		android:contentDescription="@string/frame_retrieved_main_image_view_descriptor"
@@ -35,33 +47,64 @@
 		app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
 		tools:srcCompat="@tools:sample/avatars" />
 
+
+
+	<TextView
+		android:id="@+id/textView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:text="@string/face_crop_image_view_descriptor"
+		app:layout_constraintStart_toStartOf="@id/imageFaceCrop"
+		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
+		app:layout_constraintBottom_toTopOf="@+id/imageFaceCrop"/>
+
 	<ImageView
 		android:id="@+id/imageFaceCrop"
-		android:layout_width="158dp"
-		android:layout_height="146dp"
+		android:layout_width="170dp"
+		android:layout_height="170dp"
 		android:layout_marginStart="16dp"
-		android:layout_marginTop="36dp"
+		android:layout_marginTop="40dp"
+		android:layout_marginEnd="16dp"
+		android:layout_marginBottom="16dp"
+
 		android:background="@android:color/darker_gray"
 		android:contentDescription="@string/face_crop_image_view_descriptor"
+
 		app:layout_constraintRight_toLeftOf="@+id/imageMatchDataset"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
+		app:layout_constraintBottom_toTopOf="@+id/textViewNameOfSuspectMain"/>
 
-		>
+	<TextView
+		android:id="@+id/textView2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:layout_marginStart="0dp"
+		android:text="@string/match_in_dataset_image_view_descriptor"
 
-	</ImageView>
+		app:layout_constraintStart_toStartOf="@id/imageMatchDataset"
+		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
+		app:layout_constraintBottom_toTopOf="@+id/imageMatchDataset"/>
 
 	<ImageView
 		android:id="@+id/imageMatchDataset"
-		android:layout_width="147dp"
-		android:layout_height="146dp"
-		android:layout_marginTop="36dp"
+		android:layout_width="170dp"
+		android:layout_height="170dp"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="40dp"
+		android:layout_marginBottom="16dp"
 		android:layout_marginEnd="16dp"
+
 		android:background="@android:color/darker_gray"
 		android:contentDescription="@string/match_in_dataset_image_view_descriptor"
+
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintLeft_toRightOf="@+id/imageFaceCrop"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame"></ImageView>
+		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
+		app:layout_constraintBottom_toTopOf="@id/textViewNameOfSuspectMain"/>
+
 
 
 	<TextView
@@ -73,8 +116,7 @@
 		android:text="@string/name_main"
 		android:textSize="18sp"
 		app:layout_constraintBottom_toTopOf="@+id/textViewAccuracyMain"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/imageFaceCrop" />
+		app:layout_constraintStart_toStartOf="parent" />
 
 	<TextView
 		android:id="@+id/textViewAccuracyMain"
@@ -87,44 +129,10 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/textViewNameOfSuspectMain" />
 
-	<TextView
-		android:id="@+id/textView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="16dp"
-		android:text="Rosto Ampliado"
-		app:layout_constraintEnd_toStartOf="@+id/textView2"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame" />
 
-	<TextView
-		android:id="@+id/textView2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="81dp"
-		android:layout_marginTop="16dp"
-		android:layout_marginEnd="42dp"
-		android:text="Imagem do Arquivo"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@+id/textView"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame" />
 
-	<TextView
-		android:id="@+id/textView3"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="8dp"
-		android:layout_marginEnd="275dp"
-		android:layout_marginBottom="11dp"
-		android:text="Imagem Capturada"
-		app:layout_constraintBottom_toTopOf="@+id/imageFrame"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.0"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
-		app:layout_constraintVertical_bias="0.0" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,10 +9,9 @@
 
 	<string name="accuracy_main">Accuracy:</string>
 	<string name="name_main">Name:</string>
-<!--	END MAIN-->
-
 
 	<string name="history_title">History</string>
 	<string name="main_title">Scanning</string>
 
+	<!--	END MAIN-->
 </resources>
