@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">AppPolicial</string>
-    <string name="title_activity_camera">camera</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+<!--	MAIN -->
+	<string name="match_in_dataset_image_view_descriptor">Match in dataset</string>
+	<string name="face_crop_image_view_descriptor">Face crop</string>
+	<string name="frame_retrieved_main_image_view_descriptor">Frame retrieved</string>
+
+	<string name="accuracy_main">Accuracy:</string>
+	<string name="name_main">Name:</string>
+
+	<string name="history_title">History</string>
+	<string name="main_title">Scanning</string>
+
+	<!--	END MAIN-->
 </resources>
