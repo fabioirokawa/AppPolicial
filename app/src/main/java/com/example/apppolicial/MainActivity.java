@@ -57,85 +57,150 @@ public class MainActivity extends AppCompatActivity {
         byte[] aByte = new byte[1024];
         int bytesRead;
         InputStream is;
-        String message;
+		File pathFrame;
+		File pathFaceCrop;
+		File pathMatchDataset;
+		String[] mensagemSeparada;
+		boolean error=false;
+		NotifyAlert notifyAlert = new NotifyAlert();
+		FileOutputStream fos;
+		BufferedOutputStream bos;
 
-        MyServer(Context c){
+		MyServer(Context c){
             context = c;
         }
         @Override
         public void run() {
             try {
-                ss = new ServerSocket(9700);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"Waiting for client", Toast.LENGTH_SHORT).show();
-                    }
-                });//Acessa thread principal para exibir mensagem flutuante
-                NotifyAlert notifyAlert = new NotifyAlert();
+				ss = new ServerSocket(9700);
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(getApplicationContext(), "Aguardando Conexao", Toast.LENGTH_LONG).show();
+					}
+				});//Acessa thread principal para exibir mensagem flutuante
+			}catch (IOException ex){
+				ex.printStackTrace();
+				error=true;
+			}
 
+			while (!error){
+				try{
 
-                while (true){
-                    System.out.println("Aguardando conexão");//Mesagem mostrada no Logcat
+					//Recebe mensagem para criacao de estruturas de pastas
+                    Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
                     mySocket = ss.accept();
                     is = mySocket.getInputStream();
-                    System.out.println("Conectado");
-                    notifyAlert.sendOnChannel1(context);
+                    Log.i("[INFO]","Conectado");
 
-                    if (is!= null) {
-                        FileOutputStream fos = null;
-                        BufferedOutputStream bos = null;
-                        try {
-                            fos = new FileOutputStream("/storage/emulated/0/DCIM/Camera/000002.bmp");
-                            bos = new BufferedOutputStream(fos);
+                    //Notificacao
+					notifyAlert.sendOnChannel1(context);
 
-                            bytesRead = is.read(aByte);
-                            System.out.println("bytesRead lenght: " + bytesRead);
-                            String message = new String(aByte).substring(0, bytesRead);
-                            message = message.substring(0,message.indexOf("\0"));
-                            System.out.println("Bytes content: " + message);
+					if(is!=null) {
+						bytesRead = is.read(aByte);
+						Log.i("[INFO]", "bytesRead lenght: " + bytesRead);
+						String message = new String(aByte).substring(0, bytesRead);
+						message = message.substring(0, message.indexOf("\0"));
+						Log.i("[INFO]", "Bytes content: " + message);
 
+						mensagemSeparada = message.split("\n");
 
-                            while ((bytesRead = is.read(aByte)) != -1) {
-                                bos.write(aByte, 0, bytesRead);
-                            }
-
-                            final String finalMessage = message;
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    File imgFile = new  File("/storage/emulated/0/DCIM/Camera/000002.bmp");
-
-                                    if(imgFile.exists()){
-                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                        ImageView myImage = (ImageView) findViewById(R.id.imageViewT);
-                                        myImage.setImageBitmap(myBitmap);
+						File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
+						String nome = mensagemSeparada[0] + mensagemSeparada[2];
+						pathFrame = new File(mydir, nome + ".bmp");
+						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
+						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
+					}
+				}catch (IOException ex){
+					ex.printStackTrace();
+				}
 
 
-                                        TextView textView = (TextView) findViewById(R.id.textView);
-                                        textView.setText(finalMessage);
-                                    }
-                                }
-                            });
-                            bos.flush();
-                            bos.close();
-                            mySocket.close();
-                            Log.i("IMSERVICE", "FILERECCC-2");
-                        } catch (IOException ex) {
-                            // Do exception handling
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+					//Caminho do frame
+					receiveData(pathFrame);
+					//Caminho do face crop
+					receiveData(pathFaceCrop);
+					//Caminho do match dataset
+					receiveData(pathMatchDataset);
+
+
+					//Coloca tudo no ImageView e TextView
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							File imgFileFrame = new  File(String.valueOf(pathFrame));
+							File imgFileFaceCrop = new  File(String.valueOf(pathFaceCrop));
+							File imgFileMatchDataset = new  File(String.valueOf(pathMatchDataset));
+
+							if(imgFileFrame.exists()) {
+								Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
+								ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
+								imageViewFrame.setImageBitmap(bitmapFrame);
+							}
+							if (imgFileFaceCrop.exists()){
+								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
+								ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
+								imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
+							}
+							if (imgFileMatchDataset.exists()){
+								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
+								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
+								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
+							}
+
+
+							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
+							textViewName.setText("Name: " + mensagemSeparada[0]);
+							//textViewName.append(mensagemSeparada[0]);
+
+							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
+							textViewAccuracy.setText("Accuracy: " + mensagemSeparada[2]);
+							//textViewAccuracy.append(mensagemSeparada[2]);
+
+
+						}
+					});
+
+
+
             }
+
+
             try {
                 ss.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+		private void receiveData(File path){
+
+			try {
+
+				Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
+				Socket mySocket = ss.accept();
+				InputStream is = mySocket.getInputStream();
+				Log.i("[INFO]","Conectado");
+
+				if(is!=null) {
+
+					fos = new FileOutputStream(path);
+					bos = new BufferedOutputStream(fos);
+					while ((bytesRead = is.read(aByte)) != -1) {
+						bos.write(aByte, 0, bytesRead);
+					}
+                    bos.flush();
+                    bos.close();
+                    mySocket.close();
+                }
+			}catch (IOException ex){
+				ex.printStackTrace();
+			}
+		}
     }
+
+
+
 
     private void requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
