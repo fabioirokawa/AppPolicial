@@ -32,6 +32,7 @@ import java.sql.SQLOutput;
 
 public class MainActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
+    private BufferedReader in = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,23 +138,24 @@ public class MainActivity extends AppCompatActivity {
 								imageViewFrame.setImageBitmap(bitmapFrame);
 							}
 							if (imgFileFaceCrop.exists()){
-								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(imgFileFaceCrop.getAbsolutePath());
+								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
 								ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
 								imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
 							}
 							if (imgFileMatchDataset.exists()){
-								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(imgFileMatchDataset.getAbsolutePath());
+								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
 								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
 							}
 
+
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-							textViewName.setText(R.string.name_main);
-							textViewName.append(mensagemSeparada[0]);
+							textViewName.setText("Name: " + mensagemSeparada[0]);
+							//textViewName.append(mensagemSeparada[0]);
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-							textViewAccuracy.setText(R.string.accuracy_main);
-							textViewAccuracy.append(mensagemSeparada[2]);
+							textViewAccuracy.setText("Accuracy: " + mensagemSeparada[2]);
+							//textViewAccuracy.append(mensagemSeparada[2]);
 
 
 						}
@@ -176,27 +178,21 @@ public class MainActivity extends AppCompatActivity {
 			try {
 
 				Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
-				mySocket = ss.accept();
-				is = mySocket.getInputStream();
+				Socket mySocket = ss.accept();
+				InputStream is = mySocket.getInputStream();
 				Log.i("[INFO]","Conectado");
 
 				if(is!=null) {
-
-					bytesRead = is.read(aByte);
-					Log.i("[INFO]", "bytesRead lenght: " + bytesRead);
-
-
 
 					fos = new FileOutputStream(path);
 					bos = new BufferedOutputStream(fos);
 					while ((bytesRead = is.read(aByte)) != -1) {
 						bos.write(aByte, 0, bytesRead);
 					}
-
+                    bos.flush();
+                    bos.close();
                     mySocket.close();
-					bos.close();
-					bos.flush();
-				}
+                }
 			}catch (IOException ex){
 				ex.printStackTrace();
 			}
