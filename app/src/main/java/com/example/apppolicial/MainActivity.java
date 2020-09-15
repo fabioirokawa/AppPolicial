@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
 			try {
 
 				Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
-				Socket mySocket = ss.accept();
-				InputStream is = mySocket.getInputStream();
+				mySocket = ss.accept();
+				is = mySocket.getInputStream();
 				Log.i("[INFO]","Conectado");
 
 				if(is!=null) {
@@ -192,10 +192,11 @@ public class MainActivity extends AppCompatActivity {
 					while ((bytesRead = is.read(aByte)) != -1) {
 						bos.write(aByte, 0, bytesRead);
 					}
-                    bos.flush();
-                    bos.close();
+
                     mySocket.close();
-                }
+					bos.close();
+					bos.flush();
+				}
 			}catch (IOException ex){
 				ex.printStackTrace();
 			}
