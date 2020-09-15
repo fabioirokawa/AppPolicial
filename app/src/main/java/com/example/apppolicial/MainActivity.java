@@ -133,17 +133,17 @@ public class MainActivity extends AppCompatActivity {
 
 							if(imgFileFrame.exists()) {
 								Bitmap bitmapFrame = BitmapFactory.decodeFile(imgFileFrame.getAbsolutePath());
-								ImageView imageViewFrame = findViewById(R.id.imageFrame);
+								ImageView imageViewFrame = (ImageView) findViewById(R.id.imageFrame);
 								imageViewFrame.setImageBitmap(bitmapFrame);
 							}
 							if (imgFileFaceCrop.exists()){
-								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(String.valueOf(pathFaceCrop));
-								ImageView imageViewFaceCrop = findViewById(R.id.imageFaceCrop);
+								Bitmap bitmapFaceCrop = BitmapFactory.decodeFile(imgFileFaceCrop.getAbsolutePath());
+								ImageView imageViewFaceCrop = (ImageView) findViewById(R.id.imageFaceCrop);
 								imageViewFaceCrop.setImageBitmap(bitmapFaceCrop);
 							}
 							if (imgFileMatchDataset.exists()){
-								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
-								ImageView imageViewMatchDataset = findViewById(R.id.imageMatchDataset);
+								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(imgFileMatchDataset.getAbsolutePath());
+								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
 							}
 
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 							textViewName.append(mensagemSeparada[0]);
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-							textViewName.setText(R.string.accuracy_main);
+							textViewAccuracy.setText(R.string.accuracy_main);
 							textViewAccuracy.append(mensagemSeparada[2]);
 
 
