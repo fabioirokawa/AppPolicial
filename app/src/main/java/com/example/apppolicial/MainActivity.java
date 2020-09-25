@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToHist(){
-        Intent intent = new Intent(this, camera.class);
+        Intent intent = new Intent(this, historico.class);
         startActivity(intent);
     }
 }

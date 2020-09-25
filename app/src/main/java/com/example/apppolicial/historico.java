@@ -3,6 +3,9 @@ package com.example.apppolicial;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class historico extends AppCompatActivity {
 
@@ -10,5 +13,18 @@ public class historico extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
+        ListView mListView = (ListView) findViewById(R.id.histList);
+
+        hist_dados carlos = new hist_dados("Carlos","Assalto");
+        hist_dados andre = new hist_dados("Andre","Roubo");
+        hist_dados reginaldo = new hist_dados("Reginaldo","Não usou máscara");
+
+        ArrayList<hist_dados> histDadosList = new ArrayList<>();
+        histDadosList.add(carlos);
+        histDadosList.add(andre);
+        histDadosList.add(reginaldo);
+
+        HistDadosListAdapter adapter = new HistDadosListAdapter(this, R.layout.historico_template, histDadosList);
+        mListView.setAdapter(adapter);
     }
 }
