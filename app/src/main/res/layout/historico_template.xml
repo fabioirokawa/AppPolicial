@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:weightSum="100">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_weight="10"/>
+        android:layout_weight="10"
+        android:id="@+id/imageSus"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,12 +22,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:textSize="30sp"
             android:text="Carlos da Silva"
             android:id="@+id/textNome"/>
         <TextView
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:textSize="30sp"
             android:text="Assalto"
             android:id="@+id/textCrime"/>
 
