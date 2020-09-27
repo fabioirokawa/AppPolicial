@@ -1,138 +1,112 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version = "1.0" encoding = "utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".MainActivity">
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background="@drawable/sampa_background1"
+	>
 
-
-	<androidx.appcompat.widget.Toolbar
-		android:id="@+id/toolbar_main"
-		android:layout_width="match_parent"
-		android:layout_height="53dp"
-		android:background="?attr/colorPrimary"
-		android:minHeight="?attr/actionBarSize"
-		android:theme="?attr/actionBarTheme"
+	<Button
+		android:id="@+id/botaoVoltar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="read"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:title="@string/main_title"
-		app:titleTextColor="@android:color/white"/>
-
-	<TextView
-		android:id="@+id/textView3"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="16dp"
-		android:layout_marginBottom="16dp"
-		android:text="@string/frame_retrieved_main_image_view_descriptor"
-		app:layout_constraintStart_toStartOf="@id/imageFrame"
-		app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
-		 />
-
-	<ImageView
-		android:id="@+id/imageFrame"
-		android:layout_width="match_parent"
-		android:layout_height="260dp"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="40dp"
-		android:layout_marginEnd="16dp"
-		android:background="@android:color/darker_gray"
-		android:contentDescription="@string/frame_retrieved_main_image_view_descriptor"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.0"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
-		tools:srcCompat="@tools:sample/avatars" />
-
-
-
-	<TextView
-		android:id="@+id/textView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="16dp"
-		android:text="@string/face_crop_image_view_descriptor"
-		app:layout_constraintStart_toStartOf="@id/imageFaceCrop"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
-		app:layout_constraintBottom_toTopOf="@+id/imageFaceCrop"/>
+		app:layout_constraintVertical_bias="0.0"
+		android:background="@drawable/botao"/>
 
 	<ImageView
 		android:id="@+id/imageFaceCrop"
-		android:layout_width="170dp"
-		android:layout_height="170dp"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="40dp"
-		android:layout_marginEnd="16dp"
-		android:layout_marginBottom="16dp"
-
-		android:background="@android:color/darker_gray"
-		android:contentDescription="@string/face_crop_image_view_descriptor"
-
-		app:layout_constraintRight_toLeftOf="@+id/imageMatchDataset"
+		android:layout_width="200dp"
+		android:layout_height="200dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/imageMatchDataset"
+		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
-		app:layout_constraintBottom_toTopOf="@+id/textViewNameOfSuspectMain"/>
-
-	<TextView
-		android:id="@+id/textView2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="16dp"
-		android:layout_marginStart="0dp"
-		android:text="@string/match_in_dataset_image_view_descriptor"
-
-		app:layout_constraintStart_toStartOf="@id/imageMatchDataset"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
-		app:layout_constraintBottom_toTopOf="@+id/imageMatchDataset"/>
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.674" />
 
 	<ImageView
 		android:id="@+id/imageMatchDataset"
-		android:layout_width="170dp"
-		android:layout_height="170dp"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="40dp"
-		android:layout_marginBottom="16dp"
-		android:layout_marginEnd="16dp"
-
-		android:background="@android:color/darker_gray"
-		android:contentDescription="@string/match_in_dataset_image_view_descriptor"
-
+		android:layout_width="200dp"
+		android:layout_height="200dp"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintLeft_toRightOf="@+id/imageFaceCrop"
-		app:layout_constraintTop_toBottomOf="@+id/imageFrame"
-		app:layout_constraintBottom_toTopOf="@id/textViewNameOfSuspectMain"/>
+		app:layout_constraintHorizontal_bias="0.947"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.687"
+		tools:srcCompat="@tools:sample/avatars" />
 
+	<ImageView
+		android:id="@+id/imageFrame"
+		android:layout_width="411dp"
+		android:layout_height="273dp"
+		android:layout_marginTop="72dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+	<Button
+		android:id="@+id/botaoHistorico"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Historico"
+		app:layout_constraintBottom_toBottomOf="parent"
+		android:background="@drawable/botao"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.977"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.847" />
+
+	<Button
+		android:id="@+id/botaoPerfil"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Perfil"
+		android:background="@drawable/botao"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.978"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.954" />
 
 	<TextView
 		android:id="@+id/textViewNameOfSuspectMain"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="8dp"
-		android:text="@string/name_main"
-		android:textSize="18sp"
-		app:layout_constraintBottom_toTopOf="@+id/textViewAccuracyMain"
-		app:layout_constraintStart_toStartOf="parent" />
+		android:layout_marginEnd="224dp"
+		android:layout_marginRight="224dp"
+		android:text="Nome: "
+		android:textColor="#000000"
+		android:textSize="24sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintHorizontal_bias="1.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.828" />
 
 	<TextView
 		android:id="@+id/textViewAccuracyMain"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="8dp"
-		android:text="@string/accuracy_main"
-		android:textSize="18sp"
+		android:layout_marginTop="40dp"
+		android:layout_marginBottom="44dp"
+		android:text="Acurácia:"
+		android:textColor="#040303"
+		android:textSize="24sp"
+		android:typeface="normal"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintHorizontal_bias="0.041"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/textViewNameOfSuspectMain" />
-
-
-
-
-
-
-
+		app:layout_constraintVertical_bias="0.02" />
 </androidx.constraintlayout.widget.ConstraintLayout>
