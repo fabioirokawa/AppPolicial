@@ -2,16 +2,16 @@
     <string name="app_name">AppPolicial</string>
 
 
-<!--	MAIN -->
-	<string name="match_in_dataset_image_view_descriptor">Match in dataset</string>
-	<string name="face_crop_image_view_descriptor">Face crop</string>
-	<string name="frame_retrieved_main_image_view_descriptor">Frame retrieved</string>
+    <!--	MAIN -->
+    <string name="match_in_dataset_image_view_descriptor">Match in dataset</string>
+    <string name="face_crop_image_view_descriptor">Face crop</string>
+    <string name="frame_retrieved_main_image_view_descriptor">Frame retrieved</string>
 
-	<string name="accuracy_main">Accuracy:</string>
-	<string name="name_main">Name:</string>
+    <string name="accuracy_main">Accuracy:</string>
+    <string name="name_main">Name:</string>
 
-	<string name="history_title">History</string>
-	<string name="main_title">Scanning</string>
+    <string name="history_title">History</string>
+    <string name="main_title">Scanning</string>
 
-	<!--	END MAIN-->
+    <!--	END MAIN-->
 </resources>
