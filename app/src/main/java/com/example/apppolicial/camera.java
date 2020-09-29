@@ -9,12 +9,15 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,22 @@ public class camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+		Button button = findViewById(R.id.botaoPerfil);
+		Button button2 = findViewById(R.id.botaoHistorico);
+
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToPerf();
+			}
+		});
+
+		button2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToHist();
+			}
+		});
 
         if (!(ContextCompat.checkSelfPermission(camera.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
@@ -46,6 +65,16 @@ public class camera extends AppCompatActivity {
         Thread myThread = new Thread(new MyServer(this));
         myThread.start();//Inicaia thread de conexão via socket
     }
+
+	public void goToHist(){
+		Intent intent = new Intent (this, historico.class);
+		startActivity(intent);
+	}
+
+	public void goToPerf(){
+		Intent intent = new Intent (this, perfil.class);
+		startActivity(intent);
+	}
 
     class MyServer implements  Runnable{
         ServerSocket ss;
