@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToCamera(){
-        Intent intent = new Intent(this, DetectionActivity.class);
+        Intent intent = new Intent(this, camera.class);
         startActivity(intent);
     }
 

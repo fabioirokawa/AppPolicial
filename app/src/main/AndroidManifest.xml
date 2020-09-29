@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.apppolicial">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -25,16 +28,17 @@
             android:value="AIzaSyDnqj8Oi9Gnox5bryzT0UhmUYRwGHOudBM"/>
 
         <activity android:name=".historico" />
-        <activity android:name=".DetectionActivity">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".camera" />
+        <activity android:name=".perfil" />
         <activity android:name=".LocalMaps" />
-        <activity android:name=".MainActivity"/>
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
