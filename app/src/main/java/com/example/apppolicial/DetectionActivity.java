@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,14 +31,16 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class camera extends AppCompatActivity {
+public class DetectionActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
-    private BufferedReader in = null;
+	Handler handler = new Handler(Looper.getMainLooper());//Usado para acessar a thread principal
+	private Thread serverThread = new Thread(new MyServer(this));
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_detection);
+
 
 		Button button = findViewById(R.id.botaoPerfil);
 		Button button2 = findViewById(R.id.botaoHistorico);
@@ -57,13 +59,13 @@ public class camera extends AppCompatActivity {
 			}
 		});
 
-        if (!(ContextCompat.checkSelfPermission(camera.this,
+        if (!(ContextCompat.checkSelfPermission(DetectionActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
             requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
         }//Verifica se app já tem permissão para gravar arquivos
 
-        Thread myThread = new Thread(new MyServer(this));
-        myThread.start();//Inicaia thread de conexão via socket
+		serverThread.start();//Inicia thread de conexão via socket
+
     }
 
 	public void goToHist(){
@@ -72,14 +74,13 @@ public class camera extends AppCompatActivity {
 	}
 
 	public void goToPerf(){
-		Intent intent = new Intent (this, perfil.class);
+		Intent intent = new Intent (this, ProfileActivity.class);
 		startActivity(intent);
 	}
 
-    class MyServer implements  Runnable{
+    class MyServer implements Runnable{
         ServerSocket ss;
         Socket mySocket;
-        Handler handler = new Handler();//Usado para acessar a thread principal
         Context context;
         byte[] aByte = new byte[1024];
         int bytesRead;
@@ -99,7 +100,8 @@ public class camera extends AppCompatActivity {
         @Override
         public void run() {
             try {
-				ss = new ServerSocket(9700);
+            	ss = new ServerSocket(9700);
+
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -110,7 +112,6 @@ public class camera extends AppCompatActivity {
 				ex.printStackTrace();
 				error=true;
 			}
-
 			while (!error){
 				try{
 
@@ -183,8 +184,6 @@ public class camera extends AppCompatActivity {
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText("Accuracy: " + mensagemSeparada[2]);
 							//textViewAccuracy.append(mensagemSeparada[2]);
-
-
 						}
 					});
 
@@ -192,9 +191,10 @@ public class camera extends AppCompatActivity {
 
             }
 
-
             try {
-                ss.close();
+            	if (ss != null) {
+					ss.close();
+				}
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -238,7 +238,7 @@ public class camera extends AppCompatActivity {
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(camera.this,
+                            ActivityCompat.requestPermissions(DetectionActivity.this,
                                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                         }
                     })

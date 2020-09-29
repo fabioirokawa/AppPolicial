@@ -1,11 +1,11 @@
 package com.example.apppolicial;
 
-public class hist_dados {
+public class Suspect {
     private int imgSus;
     private String nome;
     private String crime;
 
-    public hist_dados(String nome, String crime, int imgSus) {
+    public Suspect(String nome, String crime, int imgSus) {
         this.nome = nome;
         this.crime = crime;
         this.imgSus = imgSus;

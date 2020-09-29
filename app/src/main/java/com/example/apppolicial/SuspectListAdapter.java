@@ -13,12 +13,12 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class HistDadosListAdapter extends ArrayAdapter<hist_dados> {
+public class SuspectListAdapter extends ArrayAdapter<Suspect> {
 
     private Context nContext;
     int nResource;
 
-    public HistDadosListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<hist_dados> objects) {
+    public SuspectListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Suspect> objects) {
         super(context, resource, objects);
         nContext = context;
         nResource = resource;
@@ -31,7 +31,7 @@ public class HistDadosListAdapter extends ArrayAdapter<hist_dados> {
         String crime = getItem(position).getCrime();
         int imageSus = getItem(position).getImgSus();
 
-        hist_dados DadosHist = new hist_dados(nome, crime, imageSus);
+        Suspect DadosHist = new Suspect(nome, crime, imageSus);
 
         LayoutInflater inflater = LayoutInflater.from(nContext);
         convertView = inflater.inflate(nResource, parent, false);

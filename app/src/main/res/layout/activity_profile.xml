@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sampa_background1"
-    tools:context=".perfil">
+    tools:context=".ProfileActivity">
 
     <ImageView
         android:id="@+id/perfilView"
