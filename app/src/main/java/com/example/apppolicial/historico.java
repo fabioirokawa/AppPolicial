@@ -19,17 +19,6 @@ public class historico extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
 
-
-        btn_maps = (Button) findViewById(R.id.maps);
-        btn_maps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMaps();
-            }
-        });
-    }
-
-    public void goToMaps(){
         ListView mListView = (ListView) findViewById(R.id.histList);
 
         hist_dados carlos = new hist_dados("Carlos","Assalto", R.drawable.sampa_background);
@@ -43,6 +32,17 @@ public class historico extends AppCompatActivity {
 
         HistDadosListAdapter adapter = new HistDadosListAdapter(this, R.layout.layout_historico, histDadosList);
         mListView.setAdapter(adapter);
+
+        btn_maps = (Button) findViewById(R.id.maps);
+        btn_maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMaps();
+            }
+        });
+    }
+
+    public void goToMaps(){
 
         Intent intent = new Intent(this, LocalMaps.class);
         intent.putExtra("Latitude", -22.835132);

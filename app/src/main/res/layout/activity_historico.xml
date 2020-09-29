@@ -12,8 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Maps"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="613dp" />
+        app:layout_constraintBottom_toTopOf="@+id/histList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ListView
         android:layout_width="356dp"
         android:layout_height="618dp"
