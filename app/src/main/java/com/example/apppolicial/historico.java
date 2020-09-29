@@ -12,14 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class historico extends AppCompatActivity {
+    private Button btn_maps;
 
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
 
 
-		Button btn_maps = findViewById(R.id.maps);
+        btn_maps = (Button) findViewById(R.id.maps);
         btn_maps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -31,16 +32,16 @@ public class historico extends AppCompatActivity {
     public void goToMaps(){
         ListView mListView = (ListView) findViewById(R.id.histList);
 
-        Suspect carlos = new Suspect("Carlos","Assalto", R.drawable.sampa_background);
-        Suspect andre = new Suspect("Andre","Roubo", R.drawable.sampa_background);
-        Suspect reginaldo = new Suspect("Reginaldo","Não usou máscara", R.drawable.sampa_background);
+        hist_dados carlos = new hist_dados("Carlos","Assalto", R.drawable.sampa_background);
+        hist_dados andre = new hist_dados("Andre","Roubo", R.drawable.sampa_background);
+        hist_dados reginaldo = new hist_dados("Reginaldo","Não usou máscara", R.drawable.sampa_background);
 
-        ArrayList<Suspect> histDadosList = new ArrayList<>();
+        ArrayList<hist_dados> histDadosList = new ArrayList<>();
         histDadosList.add(carlos);
         histDadosList.add(andre);
         histDadosList.add(reginaldo);
 
-        SuspectListAdapter adapter = new SuspectListAdapter(this, R.layout.layout_historico, histDadosList);
+        HistDadosListAdapter adapter = new HistDadosListAdapter(this, R.layout.layout_historico, histDadosList);
         mListView.setAdapter(adapter);
 
         Intent intent = new Intent(this, LocalMaps.class);
