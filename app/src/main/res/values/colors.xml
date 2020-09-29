@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00838f</color>
-    <color name="colorPrimaryDark">#005662</color>
-    <color name="colorAccent">#D50000</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="cinza_perfil">#959595</color>
+    <color name="cinza_claro_perfil">#cfcfcf</color>
+    <color name="perfil_vermelho">#f31212</color>
+    <color name="perfil_amarelo">#f3ee12</color>
+    <color name="perfil_verde">#44f300</color>
 </resources>

@@ -9,50 +9,78 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLOutput;
 
-public class MainActivity extends AppCompatActivity {
+public class DetectionActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
-    private BufferedReader in = null;
+	Handler handler = new Handler(Looper.getMainLooper());//Usado para acessar a thread principal
+	private Thread serverThread = new Thread(new MyServer(this));
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detection);
 
 
-        if (!(ContextCompat.checkSelfPermission(MainActivity.this,
+		Button button = findViewById(R.id.botaoPerfil);
+		Button button2 = findViewById(R.id.botaoHistorico);
+
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToPerf();
+			}
+		});
+
+		button2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToHist();
+			}
+		});
+
+        if (!(ContextCompat.checkSelfPermission(DetectionActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
             requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
         }//Verifica se app já tem permissão para gravar arquivos
 
-        Thread myThread = new Thread(new MyServer(this));
-        myThread.start();//Inicaia thread de conexão via socket
+		serverThread.start();//Inicia thread de conexão via socket
+
     }
 
-    class MyServer implements  Runnable{
+	public void goToHist(){
+		Intent intent = new Intent (this, historico.class);
+		startActivity(intent);
+	}
+
+	public void goToPerf(){
+		Intent intent = new Intent (this, ProfileActivity.class);
+		startActivity(intent);
+	}
+
+    class MyServer implements Runnable{
         ServerSocket ss;
         Socket mySocket;
-        Handler handler = new Handler();//Usado para acessar a thread principal
         Context context;
         byte[] aByte = new byte[1024];
         int bytesRead;
@@ -72,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-				ss = new ServerSocket(9700);
+            	ss = new ServerSocket(9700);
+
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -83,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 				ex.printStackTrace();
 				error=true;
 			}
-
 			while (!error){
 				try{
 
@@ -156,8 +184,6 @@ public class MainActivity extends AppCompatActivity {
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText("Accuracy: " + mensagemSeparada[2]);
 							//textViewAccuracy.append(mensagemSeparada[2]);
-
-
 						}
 					});
 
@@ -165,9 +191,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-
             try {
-                ss.close();
+            	if (ss != null) {
+					ss.close();
+				}
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -211,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this,
+                            ActivityCompat.requestPermissions(DetectionActivity.this,
                                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                         }
                     })

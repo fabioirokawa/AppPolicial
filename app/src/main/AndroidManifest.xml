@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.apppolicial" >
+    package="com.example.apppolicial">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -19,14 +21,23 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:theme="@style/AppTheme">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDnqj8Oi9Gnox5bryzT0UhmUYRwGHOudBM"/>
+
+        <activity android:name=".historico" />
+        <activity android:name=".DetectionActivity">
+		<intent-filter>
+			<action android:name="android.intent.action.MAIN" />
+
+			<category android:name="android.intent.category.LAUNCHER" />
+		</intent-filter>
+		</activity>
+
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".LocalMaps" />
+	</application>
 
 </manifest>
