@@ -7,4 +7,11 @@
     android:background="@drawable/sampa_background1"
     tools:context=".historico">
 
+    <Button
+        android:id="@+id/maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Maps"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="613dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

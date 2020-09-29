@@ -12,6 +12,7 @@
 
     <string name="history_title">History</string>
     <string name="main_title">Scanning</string>
+    <string name="Maps">Maps</string>
 
     <!--	END MAIN-->
 </resources>
