@@ -1,6 +1,7 @@
 package com.example.apppolicial;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,7 +14,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +43,11 @@ public class camera extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
 
 		Button button = findViewById(R.id.botaoPerfil);
 		Button button2 = findViewById(R.id.botaoHistorico);
+		Button button3 = findViewById(R.id.botaoLer);
 
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -64,6 +70,18 @@ public class camera extends AppCompatActivity {
 
         Thread myThread = new Thread(new MyServer(this));
         myThread.start();//Inicaia thread de conexão via socket
+
+		button3.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) { //selecionar imagem do cel
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				//intent.setType("download/*");
+				intent.setDataAndType(selectedUri, "image/*");
+
+				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), 1);
+
+			}
+		});
     }
 
 	public void goToHist(){
@@ -265,5 +283,22 @@ public class camera extends AppCompatActivity {
             }
         }
     }
+
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK && requestCode == 1) {
+			ImageView imageView = findViewById(R.id.imageFrame);
+
+			try {
+				InputStream inputStream = getContentResolver().openInputStream(data.getData());
+
+				Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+				imageView.setImageBitmap(bitmap);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

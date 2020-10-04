@@ -28,11 +28,10 @@
             android:value="AIzaSyDnqj8Oi9Gnox5bryzT0UhmUYRwGHOudBM"/>
 
         <activity android:name=".historico" />
-        <activity android:name=".camera" />
         <activity android:name=".perfil" />
         <activity android:name=".LocalMaps" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".camera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
