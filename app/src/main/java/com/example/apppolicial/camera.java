@@ -1,7 +1,6 @@
 package com.example.apppolicial;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,9 +18,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,56 +36,75 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.text.MessageFormat;
 
 public class camera extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
+	static final int REQUEST_PHOTO_FROM_STORAGE = 1;
+	static final int REQUEST_IMAGE_CAPTURE = 2;
     private BufferedReader in = null;
+	private String dTextName = "";
+	private Bitmap dBitmap;
+	Thread clientThread;
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
 
-		Button button = findViewById(R.id.botaoPerfil);
-		Button button2 = findViewById(R.id.botaoHistorico);
-		Button button3 = findViewById(R.id.botaoLer);
+		if (!(ContextCompat.checkSelfPermission(camera.this,
+				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+			requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
+		}//Verifica se app já tem permissão para gravar arquivos
 
-		button.setOnClickListener(new View.OnClickListener() {
+		Button buttonProfile = findViewById(R.id.botaoPerfil);
+		Button buttonHistory = findViewById(R.id.botaoHistorico);
+		Button buttonReadPhoto = findViewById(R.id.botaoLer);
+		Button buttonTakePhoto = findViewById(R.id.botaoCamera);
+
+		buttonProfile.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				goToPerf();
 			}
 		});
-
-		button2.setOnClickListener(new View.OnClickListener() {
+		buttonHistory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				goToHist();
 			}
 		});
-
-        if (!(ContextCompat.checkSelfPermission(camera.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
-            requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
-        }//Verifica se app já tem permissão para gravar arquivos
-
-        Thread myThread = new Thread(new MyServer(this));
-        myThread.start();//Inicaia thread de conexão via socket
-
-		button3.setOnClickListener(new View.OnClickListener() {
+		buttonReadPhoto.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) { //selecionar imagem do cel
+
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				//intent.setType("download/*");
 				intent.setDataAndType(selectedUri, "image/*");
 
-				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), 1);
+				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), REQUEST_PHOTO_FROM_STORAGE);
 
 			}
 		});
+		buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+			}
+		});
+
+
+		Thread myThread = new Thread(new MyServer(this));
+		myThread.start();//Inicia thread de conexão via socket
     }
 
 	public void goToHist(){
@@ -97,7 +120,7 @@ public class camera extends AppCompatActivity {
     class MyServer implements  Runnable{
         ServerSocket ss;
         Socket mySocket;
-        Handler handler = new Handler();//Usado para acessar a thread principal
+        Handler handler = new Handler(Looper.getMainLooper());//Usado para acessar a thread principal
         Context context;
         byte[] aByte = new byte[1024];
         int bytesRead;
@@ -124,7 +147,10 @@ public class camera extends AppCompatActivity {
 						Toast.makeText(getApplicationContext(), "Aguardando Conexao", Toast.LENGTH_LONG).show();
 					}
 				});//Acessa thread principal para exibir mensagem flutuante
-			}catch (IOException ex){
+			}catch (BindException ex){
+				error =true;
+			}
+            catch (IOException ex){
 				ex.printStackTrace();
 				error=true;
 			}
@@ -156,18 +182,19 @@ public class camera extends AppCompatActivity {
 						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
 						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
 					}
-				}catch (IOException ex){
+
+				}
+				catch (IOException ex){
 					ex.printStackTrace();
 				}
 
 
 					//Caminho do frame
 					receiveData(pathFrame);
-					//Caminho do face crop
+					//Caminho doadb face crop
 					receiveData(pathFaceCrop);
 					//Caminho do match dataset
 					receiveData(pathMatchDataset);
-
 
 					//Coloca tudo no ImageView e TextView
 					handler.post(new Runnable() {
@@ -193,26 +220,21 @@ public class camera extends AppCompatActivity {
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
 							}
 
-
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-							textViewName.setText("Name: " + mensagemSeparada[0]);
-							//textViewName.append(mensagemSeparada[0]);
+							textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-							textViewAccuracy.setText("Accuracy: " + mensagemSeparada[2]);
-							//textViewAccuracy.append(mensagemSeparada[2]);
-
+							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
 
 						}
 					});
 
-
-
             }
 
-
             try {
-                ss.close();
+            	if (ss != null) {
+					ss.close();
+				}
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -221,7 +243,6 @@ public class camera extends AppCompatActivity {
 		private void receiveData(File path){
 
 			try {
-
 				Log.i("[INFO]","Aguardando conexão");//Mesagem mostrada no Logcat
 				Socket mySocket = ss.accept();
 				InputStream is = mySocket.getInputStream();
@@ -243,7 +264,6 @@ public class camera extends AppCompatActivity {
 			}
 		}
     }
-
 
 
 
@@ -277,28 +297,94 @@ public class camera extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == STORAGE_PERMISSION_CODE)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Obrigado", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Precisamos dessa permissao!", Toast.LENGTH_SHORT).show();
+                requestStoragePermission();
             }
         }
     }
 
-	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK && requestCode == 1) {
+		if (resultCode == RESULT_OK) {
 			ImageView imageView = findViewById(R.id.imageFrame);
 
+			switch (requestCode) {
+
+				case REQUEST_IMAGE_CAPTURE:
+					Bundle extras = data.getExtras();
+					Bitmap bitmapCamera = (Bitmap) extras.get("data");
+					dBitmap = bitmapCamera;
+					imageView.setImageBitmap(bitmapCamera);
+					break;
+				case REQUEST_PHOTO_FROM_STORAGE:
+					try {
+						InputStream inputStream = getContentResolver().openInputStream(data.getData());
+						Bitmap bitmapStorage = BitmapFactory.decodeStream(inputStream);
+						dBitmap = bitmapStorage;
+						imageView.setImageBitmap(bitmapStorage);
+
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					break;
+
+			}
+
+			clientThread = new Thread(new ClientThread(this,new Suspeito(dTextName,"CRIME",dBitmap)));
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("Digite o nome");
+					final EditText input = new EditText(this);
+					input.setInputType(InputType.TYPE_CLASS_TEXT);
+					builder.setView(input);
+					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							dTextName = input.getText().toString();
+							clientThread.start();
+
+						}
+					});
+					builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							dialogInterface.cancel();
+						}
+					});
+					builder.show();
+		}
+	}
+
+
+
+	class ClientThread implements Runnable{
+    	Suspeito dados;
+    	Context context;
+
+    	ClientThread(Context c,Suspeito dados){
+    		this.dados = dados;
+    		this.context = c;
+		}
+		@Override
+		public void run() {
+			Socket socket;
 			try {
-				InputStream inputStream = getContentResolver().openInputStream(data.getData());
+				socket = new Socket("192.168.1.113",5001);
+				OutputStream output = socket.getOutputStream();
+//				output.flush();
+//				output.write(dados.getNome().getBytes());
 
-				Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+				int size = dados.getFotoDoSuspeito().getRowBytes() * dados.getFotoDoSuspeito().getHeight();
+				ByteBuffer byteBuffer =ByteBuffer.allocate(size);
+				dados.getFotoDoSuspeito().copyPixelsToBuffer(byteBuffer);
 
-				imageView.setImageBitmap(bitmap);
-			} catch (FileNotFoundException e) {
+				output.flush();
+				output.write(byteBuffer.array());
+				output.close();
+			}catch (IOException e){
 				e.printStackTrace();
 			}
 		}
 	}
-
 }

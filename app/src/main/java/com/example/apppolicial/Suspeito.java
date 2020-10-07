@@ -1,14 +1,16 @@
 package com.example.apppolicial;
 
-public class hist_dados {
-    private int imgSus;
+import android.graphics.Bitmap;
+
+public class Suspeito {
+    private Bitmap fotoDoSuspeito;
     private String nome;
     private String crime;
 
-    public hist_dados(String nome, String crime, int imgSus) {
+    public Suspeito(String nome, String crime, Bitmap imgSus) {
         this.nome = nome;
         this.crime = crime;
-        this.imgSus = imgSus;
+        this.fotoDoSuspeito = imgSus;
     }
 
     public String getNome(){
@@ -23,10 +25,10 @@ public class hist_dados {
     public void setCrime(String crime) {
         this.crime = crime;
     }
-    public int getImgSus(){
-        return imgSus;
+    public Bitmap getFotoDoSuspeito(){
+        return fotoDoSuspeito;
     }
-    public void setImgSus(int imgSus) {
-        this.imgSus = imgSus;
+    public void setFotoDoSuspeito(Bitmap fotoDoSuspeito) {
+        this.fotoDoSuspeito = fotoDoSuspeito;
     }
 }

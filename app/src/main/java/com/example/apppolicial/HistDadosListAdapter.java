@@ -1,6 +1,7 @@
 package com.example.apppolicial;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,12 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class HistDadosListAdapter extends ArrayAdapter<hist_dados> {
+public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
     private Context nContext;
     int nResource;
 
-    public HistDadosListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<hist_dados> objects) {
+    public HistDadosListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Suspeito> objects) {
         super(context, resource, objects);
         nContext = context;
         nResource = resource;
@@ -29,9 +30,9 @@ public class HistDadosListAdapter extends ArrayAdapter<hist_dados> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         String nome = getItem(position).getNome();
         String crime = getItem(position).getCrime();
-        int imageSus = getItem(position).getImgSus();
+        Bitmap imageSus = getItem(position).getFotoDoSuspeito();
 
-        hist_dados DadosHist = new hist_dados(nome, crime, imageSus);
+        Suspeito DadosHist = new Suspeito(nome, crime, imageSus);
 
         LayoutInflater inflater = LayoutInflater.from(nContext);
         convertView = inflater.inflate(nResource, parent, false);
@@ -42,7 +43,7 @@ public class HistDadosListAdapter extends ArrayAdapter<hist_dados> {
 
         tvNome.setText(nome);
         tvCrime.setText(crime);
-        ivSus.setImageResource(imageSus);
+        ivSus.setImageBitmap(imageSus);
 
         return convertView;
     }

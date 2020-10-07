@@ -1,6 +1,7 @@
 package com.example.apppolicial;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class historico extends AppCompatActivity {
@@ -21,11 +23,11 @@ public class historico extends AppCompatActivity {
 
         ListView mListView = (ListView) findViewById(R.id.histList);
 
-        hist_dados carlos = new hist_dados("Carlos","Assalto", R.drawable.sampa_background);
-        hist_dados andre = new hist_dados("Andre","Roubo", R.drawable.sampa_background);
-        hist_dados reginaldo = new hist_dados("Reginaldo","Não usou máscara", R.drawable.sampa_background);
+        Suspeito carlos = new Suspeito("Carlos","Assalto", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
+        Suspeito andre = new Suspeito("Andre","Roubo", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
+        Suspeito reginaldo = new Suspeito("Reginaldo","Não usou máscara", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
 
-        ArrayList<hist_dados> histDadosList = new ArrayList<>();
+        ArrayList<Suspeito> histDadosList = new ArrayList<>();
         histDadosList.add(carlos);
         histDadosList.add(andre);
         histDadosList.add(reginaldo);
