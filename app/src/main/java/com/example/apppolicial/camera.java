@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 public class camera extends AppCompatActivity {
@@ -361,28 +364,36 @@ public class camera extends AppCompatActivity {
 	class ClientThread implements Runnable{
     	Suspeito dados;
     	Context context;
-
+    	String SERVER_SOCKET = "";
+    	int SERVER_PORT = 5001;
     	ClientThread(Context c,Suspeito dados){
     		this.dados = dados;
     		this.context = c;
 		}
 		@Override
 		public void run() {
-			Socket socket;
 			try {
-				socket = new Socket("192.168.1.113",5001);
-				OutputStream output = socket.getOutputStream();
-//				output.flush();
-//				output.write(dados.getNome().getBytes());
+				Socket socket = new Socket(SERVER_SOCKET, SERVER_PORT);
 
-				int size = dados.getFotoDoSuspeito().getRowBytes() * dados.getFotoDoSuspeito().getHeight();
-				ByteBuffer byteBuffer =ByteBuffer.allocate(size);
-				dados.getFotoDoSuspeito().copyPixelsToBuffer(byteBuffer);
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-				output.flush();
-				output.write(byteBuffer.array());
-				output.close();
-			}catch (IOException e){
+				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.JPEG,100,stream);
+				byte[] byteArray = stream.toByteArray();
+
+				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getCorDaPele() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
+
+				OutputStream outputStream = socket.getOutputStream();
+				outputStream.write(texto.getBytes(StandardCharsets.UTF_8));
+				outputStream.flush();
+
+
+				DataOutputStream out = new DataOutputStream(outputStream);
+				out.write(byteArray,0,byteArray.length  );
+				out.flush();
+
+				Log.i("[INFO]","Arquivo enviado");
+				socket.close();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
