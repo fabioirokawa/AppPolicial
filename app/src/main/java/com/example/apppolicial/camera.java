@@ -335,7 +335,6 @@ public class camera extends AppCompatActivity {
 
 			}
 
-			clientThread = new Thread(new ClientThread(this,new Suspeito(dTextName,"CRIME",dBitmap)));
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 					builder.setTitle("Digite o nome");
 					final EditText input = new EditText(this);
@@ -345,8 +344,8 @@ public class camera extends AppCompatActivity {
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
 							dTextName = input.getText().toString();
+							clientThread = new Thread(new ClientThread(new Suspeito(dTextName,"CRIME",dBitmap)));
 							clientThread.start();
-
 						}
 					});
 					builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -364,11 +363,10 @@ public class camera extends AppCompatActivity {
 	class ClientThread implements Runnable{
     	Suspeito dados;
     	Context context;
-    	String SERVER_SOCKET = "";
+    	String SERVER_SOCKET = "192.168.1.113";
     	int SERVER_PORT = 5001;
-    	ClientThread(Context c,Suspeito dados){
+    	ClientThread(Suspeito dados){
     		this.dados = dados;
-    		this.context = c;
 		}
 		@Override
 		public void run() {
