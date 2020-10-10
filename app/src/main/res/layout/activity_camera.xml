@@ -11,21 +11,22 @@
 		android:id="@+id/botaoLer"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Load photo"
 		android:background="@drawable/botao"
-		app:layout_constraintTop_toTopOf="parent"
+		android:text="Load photo"
 		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toLeftOf="@+id/botaoCamera"/>
+		app:layout_constraintRight_toLeftOf="@+id/botaoCamera"
+		app:layout_constraintTop_toTopOf="parent" />
+
+
 	<Button
 		android:id="@+id/botaoCamera"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Take photo"
 		android:background="@drawable/botao"
-		app:layout_constraintTop_toTopOf="parent"
+		android:text="Take photo"
+		app:layout_constraintLeft_toRightOf="@+id/botaoLer"
 		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintLeft_toRightOf="@+id/botaoLer"/>
-
+		app:layout_constraintTop_toTopOf="parent" />
 
 	<ImageView
 		android:id="@+id/imageFaceCrop"
@@ -44,10 +45,10 @@
 		android:layout_height="200dp"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.947"
+		app:layout_constraintHorizontal_bias="1.0"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.687"
+		app:layout_constraintVertical_bias="0.674"
 		tools:srcCompat="@tools:sample/avatars" />
 
 	<ImageView
@@ -116,4 +117,13 @@
 		app:layout_constraintHorizontal_bias="0.041"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintVertical_bias="0.02" />
+
+	<Button
+		android:id="@+id/formula"
+		android:layout_width="79dp"
+		android:layout_height="50dp"
+		android:layout_marginTop="16dp"
+		android:text="Button"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:layout_editor_absoluteX="332dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

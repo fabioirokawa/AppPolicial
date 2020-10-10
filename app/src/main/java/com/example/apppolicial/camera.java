@@ -71,7 +71,14 @@ public class camera extends AppCompatActivity {
 		Button buttonHistory = findViewById(R.id.botaoHistorico);
 		Button buttonReadPhoto = findViewById(R.id.botaoLer);
 		Button buttonTakePhoto = findViewById(R.id.botaoCamera);
+		Button buttonForm = findViewById(R.id.formula);
 
+		buttonForm.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				goToForm();
+			}
+		});
 		buttonProfile.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -109,6 +116,11 @@ public class camera extends AppCompatActivity {
 		Thread myThread = new Thread(new MyServer(this));
 		myThread.start();//Inicia thread de conexão via socket
     }
+
+	public void goToForm(){
+		Intent intent = new Intent (this, formulario.class);
+		startActivity(intent);
+	}
 
 	public void goToHist(){
 		Intent intent = new Intent (this, historico.class);
