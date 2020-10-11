@@ -31,8 +31,9 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         String nome = getItem(position).getNome();
         String crime = getItem(position).getCrime();
         Bitmap imageSus = getItem(position).getFotoDoSuspeito();
+        String peri = getItem(position).getPericulosidade();
 
-        Suspeito DadosHist = new Suspeito(nome, crime, imageSus);
+        Suspeito DadosHist = new Suspeito(nome, crime, peri,imageSus);
 
         LayoutInflater inflater = LayoutInflater.from(nContext);
         convertView = inflater.inflate(nResource, parent, false);

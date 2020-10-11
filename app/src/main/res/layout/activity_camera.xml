@@ -7,26 +7,6 @@
 	android:background="@drawable/sampa_background1"
 	>
 
-	<Button
-		android:id="@+id/botaoLer"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/botao"
-		android:text="Load photo"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toLeftOf="@+id/botaoCamera"
-		app:layout_constraintTop_toTopOf="parent" />
-
-
-	<Button
-		android:id="@+id/botaoCamera"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/botao"
-		android:text="Take photo"
-		app:layout_constraintLeft_toRightOf="@+id/botaoLer"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
 
 	<ImageView
 		android:id="@+id/imageFaceCrop"
@@ -120,10 +100,12 @@
 
 	<Button
 		android:id="@+id/formula"
-		android:layout_width="79dp"
-		android:layout_height="50dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_marginTop="16dp"
-		android:text="Button"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:layout_editor_absoluteX="332dp" />
+		android:background="@drawable/botao"
+		android:text="Cadastrar novo"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

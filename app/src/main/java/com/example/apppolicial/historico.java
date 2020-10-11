@@ -23,9 +23,9 @@ public class historico extends AppCompatActivity {
 
         ListView mListView = (ListView) findViewById(R.id.histList);
 
-        Suspeito carlos = new Suspeito("Carlos","Assalto", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
-        Suspeito andre = new Suspeito("Andre","Roubo", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
-        Suspeito reginaldo = new Suspeito("Reginaldo","Não usou máscara", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
+        Suspeito carlos = new Suspeito("Carlos","Assalto", "Baixo" ,BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
+        Suspeito andre = new Suspeito("Andre","Roubo","Medio", BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
+        Suspeito reginaldo = new Suspeito("Reginaldo","Não usou máscara", "Alto",BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.sampa_background));
 
         ArrayList<Suspeito> histDadosList = new ArrayList<>();
         histDadosList.add(carlos);

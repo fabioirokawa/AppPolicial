@@ -49,8 +49,7 @@ import java.text.MessageFormat;
 
 public class camera extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
-	static final int REQUEST_PHOTO_FROM_STORAGE = 1;
-	static final int REQUEST_IMAGE_CAPTURE = 2;
+
     private BufferedReader in = null;
 	private String dTextName = "";
 	private Bitmap dBitmap;
@@ -69,8 +68,6 @@ public class camera extends AppCompatActivity {
 
 		Button buttonProfile = findViewById(R.id.botaoPerfil);
 		Button buttonHistory = findViewById(R.id.botaoHistorico);
-		Button buttonReadPhoto = findViewById(R.id.botaoLer);
-		Button buttonTakePhoto = findViewById(R.id.botaoCamera);
 		Button buttonForm = findViewById(R.id.formula);
 
 		buttonForm.setOnClickListener(new View.OnClickListener() {
@@ -91,28 +88,6 @@ public class camera extends AppCompatActivity {
 				goToHist();
 			}
 		});
-		buttonReadPhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) { //selecionar imagem do cel
-
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-				//intent.setType("download/*");
-				intent.setDataAndType(selectedUri, "image/*");
-
-				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), REQUEST_PHOTO_FROM_STORAGE);
-
-			}
-		});
-		buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
-			}
-		});
-
-
 		Thread myThread = new Thread(new MyServer(this));
 		myThread.start();//Inicia thread de conexão via socket
     }
@@ -281,7 +256,6 @@ public class camera extends AppCompatActivity {
     }
 
 
-
     private void requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -320,92 +294,5 @@ public class camera extends AppCompatActivity {
         }
     }
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			ImageView imageView = findViewById(R.id.imageFrame);
 
-			switch (requestCode) {
-
-				case REQUEST_IMAGE_CAPTURE:
-					Bundle extras = data.getExtras();
-					Bitmap bitmapCamera = (Bitmap) extras.get("data");
-					dBitmap = bitmapCamera;
-					imageView.setImageBitmap(bitmapCamera);
-					break;
-				case REQUEST_PHOTO_FROM_STORAGE:
-					try {
-						InputStream inputStream = getContentResolver().openInputStream(data.getData());
-						Bitmap bitmapStorage = BitmapFactory.decodeStream(inputStream);
-						dBitmap = bitmapStorage;
-						imageView.setImageBitmap(bitmapStorage);
-
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-					break;
-
-			}
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setTitle("Digite o nome");
-					final EditText input = new EditText(this);
-					input.setInputType(InputType.TYPE_CLASS_TEXT);
-					builder.setView(input);
-					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dTextName = input.getText().toString();
-							clientThread = new Thread(new ClientThread(new Suspeito(dTextName,"CRIME",dBitmap)));
-							clientThread.start();
-						}
-					});
-					builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dialogInterface.cancel();
-						}
-					});
-					builder.show();
-		}
-	}
-
-
-
-	class ClientThread implements Runnable{
-    	Suspeito dados;
-    	Context context;
-    	String SERVER_SOCKET = "192.168.1.113";
-    	int SERVER_PORT = 5001;
-    	ClientThread(Suspeito dados){
-    		this.dados = dados;
-		}
-		@Override
-		public void run() {
-			try {
-				Socket socket = new Socket(SERVER_SOCKET, SERVER_PORT);
-
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.JPEG,100,stream);
-				byte[] byteArray = stream.toByteArray();
-
-				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getCorDaPele() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
-
-				OutputStream outputStream = socket.getOutputStream();
-				outputStream.write(texto.getBytes(StandardCharsets.UTF_8));
-				outputStream.flush();
-
-
-				DataOutputStream out = new DataOutputStream(outputStream);
-				out.write(byteArray,0,byteArray.length  );
-				out.flush();
-
-				Log.i("[INFO]","Arquivo enviado");
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }
