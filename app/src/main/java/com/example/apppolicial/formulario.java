@@ -1,7 +1,6 @@
 package com.example.apppolicial;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -33,6 +31,8 @@ import java.nio.charset.StandardCharsets;
 public class formulario extends AppCompatActivity {
 
 	private EditText crime;
+	private NotifyAlert na = new NotifyAlert();
+
 	private EditText name;
 	private Bitmap dBitmap;
 	private String sPeri;
@@ -100,9 +100,19 @@ public class formulario extends AppCompatActivity {
 
 
 
+
 		Suspeito cadastro = new Suspeito(name.getText().toString(),crime.getText().toString(),sPeri,dBitmap);
 		Thread sendTread = new Thread(new ClientThread(cadastro));
+		na.progressNotification(this,"Enviando dados","Aguarde...");
 		sendTread.start();
+		try {
+			sendTread.join();
+			na.cancelNotification(this,2);
+			na.alertNotification(this,"Finalizado","Dados enviados");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			na.errorNotification(this,"ERRO","Falha ao enviar");
+		}
 
 	}
 
