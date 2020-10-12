@@ -73,7 +73,6 @@ public class historico extends AppCompatActivity {
 	}
 
 	public void goToMaps(){
-
 		Intent intent = new Intent(this, LocalMaps.class);
 		intent.putExtra("Latitude", -22.835132);
 		intent.putExtra("Longitude", -47.050473);

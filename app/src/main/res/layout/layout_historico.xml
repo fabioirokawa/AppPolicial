@@ -13,28 +13,35 @@
         android:id="@+id/imageSus"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="11dp"
         android:layout_height="wrap_content"
-        android:layout_weight="90">
+        android:layout_weight="90"
+        android:orientation="vertical">
 
         <TextView
-            android:gravity="center"
+            android:id="@+id/textNome"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="30sp"
+            android:gravity="center"
             android:text="Carlos da Silva"
-            android:id="@+id/textNome"/>
+            android:textSize="30sp" />
+
         <TextView
-            android:gravity="center"
+            android:id="@+id/textCrime"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="30sp"
+            android:gravity="center"
             android:text="Assalto"
-            android:id="@+id/textCrime"/>
-
+            android:textSize="30sp" />
 
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/bMapsHist"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="10"
+        android:text="Mapa" />
 
 </LinearLayout>

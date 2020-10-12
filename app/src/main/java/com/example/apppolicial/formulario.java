@@ -139,7 +139,7 @@ public class formulario extends AppCompatActivity {
 			Snackbar.make(findViewById(R.id.confirma_envio),"Defina uma foto", Snackbar.LENGTH_LONG).show();
 			return;
 		}
-		Suspeito cadastro = new Suspeito(name.getText().toString(),crime.getText().toString(), peri.getText().toString(),dBitmap);
+		Suspeito cadastro = new Suspeito(name.getText().toString(),crime.getText().toString(), peri.getText().toString(),dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
 		sendTread.start();
 	}
@@ -176,7 +176,7 @@ public class formulario extends AppCompatActivity {
 
 	class ClientThread implements Runnable{
 		Suspeito dados;
-		String SERVER_SOCKET = "192.168.1.113";
+		String SERVER_SOCKET = "192.168.0.18"; //ip maquina
 		int SERVER_PORT = 5001;
 
 
@@ -203,7 +203,7 @@ public class formulario extends AppCompatActivity {
 				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.PNG,100,stream);
 				byte[] byteArray = stream.toByteArray();
 
-				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
+				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
 
 				na.progressNotification(formulario.this,"Enviando dados","Aguarde...");
 				OutputStream outputStream = socket.getOutputStream();
