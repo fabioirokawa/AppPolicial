@@ -10,13 +10,17 @@ public class Suspeito {
     private String nome= "";
     private String crime= "";
     private String periculosidade="";
+    private Double latitude;
+    private Double longitude;
 
 
-    public Suspeito(String nome, String crime,String periculosidade, Bitmap imgSus) {
+    public Suspeito(String nome, String crime,String periculosidade, Bitmap imgSus, Double latitude, Double longitude) {
         this.nome = nome;
         this.crime = crime;
         this.fotoDoSuspeito = imgSus;
         this.periculosidade = periculosidade;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getNome(){
@@ -34,6 +38,8 @@ public class Suspeito {
     public String getPericulosidade() {
 		return periculosidade;
 	}
+
+	public Double[] getLocalizacao() { Double[] loc = {latitude, longitude}; return loc;}
 
 
 }

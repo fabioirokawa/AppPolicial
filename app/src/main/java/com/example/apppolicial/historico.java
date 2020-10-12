@@ -55,7 +55,7 @@ public class historico extends AppCompatActivity {
 		}
 		if (!(nomeSuspeito.equals(anteriorTemp)))
 		{
-			suspeitos[i] = new Suspeito(nomeSuspeito, "Crime cometido","Alto", rostoSuspeito);
+			suspeitos[i] = new Suspeito(nomeSuspeito, "Crime cometido","Alto", rostoSuspeito, 0.0, 0.0);
 			histDadosList.add(suspeitos[j]);
 			j++;
 			anteriorTemp = nomeSuspeito;
