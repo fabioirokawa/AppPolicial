@@ -2,9 +2,7 @@ package com.example.apppolicial;
 
 import android.graphics.Bitmap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class Suspeito {
 

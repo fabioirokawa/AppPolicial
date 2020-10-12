@@ -41,8 +41,9 @@ public class camera extends AppCompatActivity {
     private BufferedReader in = null;
 	private String dTextName = "";
 	private Bitmap dBitmap;
-	Thread clientThread;
-
+	private Thread clientThread;
+	private String hNomeSuspeito;
+	private Bitmap hRostoSuspeito;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,10 @@ public class camera extends AppCompatActivity {
 
 	public void goToHist(){
 		Intent intent = new Intent (this, historico.class);
+		Bundle b = new Bundle();
+		b.putString("a", hNomeSuspeito);
+		intent.putExtra("b", hRostoSuspeito);
+		intent.putExtras(b);
 		startActivity(intent);
 	}
 
@@ -194,10 +199,12 @@ public class camera extends AppCompatActivity {
 								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
 								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
+								hRostoSuspeito = bitmapMatchDataset;
 							}
 
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
 							textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
+							hNomeSuspeito = mensagemSeparada[0];
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
