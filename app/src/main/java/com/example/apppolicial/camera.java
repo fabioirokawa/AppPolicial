@@ -203,9 +203,9 @@ public class camera extends AppCompatActivity {
 								hRostoSuspeito = bitmapMatchDataset;
 							}
 
-							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-							textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
-							hNomeSuspeito = mensagemSeparada[0];
+						//	TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
+						//	textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
+						//	hNomeSuspeito = mensagemSeparada[0];
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
