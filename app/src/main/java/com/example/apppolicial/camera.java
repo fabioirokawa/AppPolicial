@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,20 +42,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class camera extends AppCompatActivity {
-    private int STORAGE_PERMISSION_CODE = 1;
+	private int STORAGE_PERMISSION_CODE = 1;
 
-    private BufferedReader in = null;
+	private BufferedReader in = null;
 	private String dTextName = "";
 	private Bitmap dBitmap;
 	private Thread clientThread;
 	private String hNomeSuspeito;
 	private Bitmap hRostoSuspeito;
+
 	@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_camera);
 		if (!(ContextCompat.checkSelfPermission(camera.this,
-				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 			requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
 		}//Verifica se app já tem permissão para gravar arquivos
 
@@ -77,7 +84,7 @@ public class camera extends AppCompatActivity {
 		});
 		Thread myThread = new Thread(new MyServer(this));
 		myThread.start();//Inicia thread de conexão via socket
-    }
+	}
 
 	public void goToForm(){
 		Intent intent = new Intent (this, formulario.class);

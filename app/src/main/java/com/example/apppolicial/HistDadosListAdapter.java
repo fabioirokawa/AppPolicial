@@ -1,8 +1,11 @@
 package com.example.apppolicial;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.internal.location.zzn;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
@@ -21,6 +31,8 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
     historico hhh = new historico();
     private Context nContext;
     int nResource;
+
+    Double[] latlong = new Double[2];
 
     public HistDadosListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Suspeito> objects) {
         super(context, resource, objects);
@@ -37,7 +49,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         String peri = getItem(position).getPericulosidade();
         Double localizacao[] = getItem(position).getLocalizacao();
 
-        Suspeito DadosHist = new Suspeito(nome, crime, peri,imageSus, localizacao[0], localizacao[1]);
+        Suspeito DadosHist = new Suspeito(nome, crime, peri, imageSus, localizacao[0], localizacao[1]);
 
         LayoutInflater inflater = LayoutInflater.from(nContext);
         convertView = inflater.inflate(nResource, parent, false);
@@ -47,12 +59,18 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         TextView tvCrime = (TextView) convertView.findViewById(R.id.textCrime);
         ImageView ivSus = (ImageView) convertView.findViewById(R.id.imageSus);
 
+
+
         bMapa.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                ObtemLocal local = new ObtemLocal();
+                latlong = local.getLocalizacao();
+
                 Intent intent = new Intent(nContext, LocalMaps.class);
-                intent.putExtra("Latitude", -22.835132);
-                intent.putExtra("Longitude", -47.050473);
+                intent.putExtra("Latitude", latlong[0]);
+                intent.putExtra("Longitude", latlong[1]);
                 nContext.startActivity(intent);
             }
         });
@@ -63,8 +81,5 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         return convertView;
     }
 
-    public void goToMaps(){
-
-    }
 
 }

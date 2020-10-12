@@ -139,6 +139,9 @@ public class formulario extends AppCompatActivity {
 			Snackbar.make(findViewById(R.id.confirma_envio),"Defina uma foto", Snackbar.LENGTH_LONG).show();
 			return;
 		}
+
+
+
 		Suspeito cadastro = new Suspeito(name.getText().toString(),crime.getText().toString(), peri.getText().toString(),dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
 		sendTread.start();

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class historico extends AppCompatActivity {
-	private Button btn_maps;
 	int i = 0;
 	static String anteriorTemp = "";
 	static Suspeito[] suspeitos = new Suspeito[10];
@@ -27,15 +26,6 @@ public class historico extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_historico);
-
-		btn_maps = findViewById(R.id.maps);
-		btn_maps.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				goToMaps();
-			}
-		});
 	}
 
 	protected void onStart() {
@@ -72,10 +62,10 @@ public class historico extends AppCompatActivity {
 		i++;
 	}
 
-	public void goToMaps(){
+	public void goToMaps(Double latitude, Double longitude){
 		Intent intent = new Intent(this, LocalMaps.class);
-		intent.putExtra("Latitude", -22.835132);
-		intent.putExtra("Longitude", -47.050473);
+		intent.putExtra("Latitude", latitude);
+		intent.putExtra("Longitude", longitude);
 		startActivity(intent);
 	}
 }
