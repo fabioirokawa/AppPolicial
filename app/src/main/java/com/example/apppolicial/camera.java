@@ -145,8 +145,6 @@ public class camera extends AppCompatActivity {
                     is = mySocket.getInputStream();
                     Log.i("[INFO]","Conectado");
 
-                    //Notificacao
-					notifyAlert.alertNotification(context,"Alerta",mensagemSeparada[0]+ " detectado!");
 
 					if(is!=null) {
 						bytesRead = is.read(aByte);
@@ -163,6 +161,9 @@ public class camera extends AppCompatActivity {
 						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
 						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
 					}
+
+					//Notificacao
+					notifyAlert.alertNotification(context,"Alerta",mensagemSeparada[0]+ " detectado!");
 
 				}
 				catch (IOException ex){
