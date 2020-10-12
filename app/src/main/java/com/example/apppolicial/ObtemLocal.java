@@ -18,10 +18,10 @@ public class ObtemLocal extends AppCompatActivity {
 
     public Double[] getLocalizacao() {
 
-        client = LocationServices.getFusedLocationProviderClient(this);
-        final Double[] latlong = new Double[2];
+        //client = LocationServices.getFusedLocationProviderClient(this);
+        final Double[] latlong = {0.0, 0.0};
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -42,7 +42,8 @@ public class ObtemLocal extends AppCompatActivity {
                     latlong[1] = location.getLongitude();
                 }
             }
-        });
+        });*/
         return latlong;
+
     }
 }
