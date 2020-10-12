@@ -74,7 +74,6 @@ public class NotifyAlert extends Application {
 
     	Notification notification = new NotificationCompat.Builder(context,CHANNEL_1_ID)
 				.setSmallIcon(R.drawable.ic_launcher_foreground)
-				.setNotificationSilent()
 				.setContentTitle(title)
 				.setContentText(content)
 				.setProgress(0,0,true)
@@ -88,6 +87,7 @@ public class NotifyAlert extends Application {
 		notificationManager = NotificationManagerCompat.from(context);
 
 		Notification notification = new NotificationCompat.Builder(context,CHANNEL_1_ID)
+				.setSmallIcon(R.drawable.ic_launcher_foreground)
 				.setContentTitle("ERRO")
 				.setContentTitle(title)
 				.setContentText(content)

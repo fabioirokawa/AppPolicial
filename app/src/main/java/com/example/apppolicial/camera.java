@@ -47,8 +47,6 @@ public class camera extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
-
 		if (!(ContextCompat.checkSelfPermission(camera.this,
 				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
 			requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)

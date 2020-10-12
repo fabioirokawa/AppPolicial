@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/sampa_background1">
 
+
     <ImageView
         android:id="@+id/iForm"
         android:layout_width="205dp"
@@ -65,7 +66,8 @@
 			app:errorEnabled="true"
 			app:hintTextColor="@android:color/background_dark"
 			app:layout_constraintTop_toBottomOf="@+id/bPegaFoto"
-			android:baselineAligned="true">
+			android:baselineAligned="true"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/formName"
 				android:layout_width="match_parent"
@@ -85,8 +87,10 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:errorEnabled="true"
+			android:baselineAligned="true"
 			app:hintTextColor="@android:color/background_dark"
-			app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+			app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/formCrime"
 				android:layout_width="match_parent"
@@ -96,41 +100,49 @@
 				android:maxLines="1" />
 		</com.google.android.material.textfield.TextInputLayout>
 
-		<Spinner
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				android:layout_marginTop="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginEnd="20dp"
-				android:layout_marginBottom="40dp"
-				app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-				android:id="@+id/formPeri"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
+		<com.google.android.material.textfield.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+			android:layout_marginTop="20dp"
+			android:layout_marginStart="20dp"
+			android:layout_marginEnd="20dp"
+			android:layout_marginBottom="40dp"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+		<AutoCompleteTextView
+			android:id="@+id/formPeri"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="none"/>
+		</com.google.android.material.textfield.TextInputLayout>
 
 
 	</LinearLayout>
+
 	<Button
-        android:id="@+id/cancela_envio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginBottom="16dp"
-        android:text="Cancelar"
+		android:id="@+id/cancela_envio"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+
+		android:layout_marginBottom="16dp"
 		android:background="@drawable/botao"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+		android:text="Cancelar"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/confirma_envio"
+		app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/confirma_envio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
         android:layout_marginBottom="16dp"
         android:text="Cadastrar"
 		android:background="@drawable/botao"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/cancela_envio"/>
 
 
 
