@@ -179,7 +179,7 @@ public class formulario extends AppCompatActivity {
 
 	class ClientThread implements Runnable{
 		Suspeito dados;
-		String SERVER_SOCKET = "192.168.0.18"; //ip maquina
+		String SERVER_SOCKET = "192.168.1.113"; //ip maquina
 		int SERVER_PORT = 5001;
 
 

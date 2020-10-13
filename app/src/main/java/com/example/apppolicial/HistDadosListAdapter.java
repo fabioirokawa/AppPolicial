@@ -90,7 +90,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         TextView pCrime = (TextView) convertView.findViewById(R.id.tSuspeitoCrime);
         //pericu Alto Medio Baixo
 
-<<<<<<< HEAD
+
         ivSus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +105,6 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
         return convertView;
     }
-=======
->>>>>>> c90667b7949c7521da509f5d885a381e414777c1
+
 
 }
