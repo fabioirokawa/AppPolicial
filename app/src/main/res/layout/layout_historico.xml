@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="100">
 
-    <ImageView
+    <ImageButton
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_weight="10"
-        android:id="@+id/imageSus"/>
+        android:id="@+id/imageSus"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
         android:layout_width="11dp"
@@ -24,7 +27,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:text="Carlos da Silva"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textCrime"
@@ -32,7 +35,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:text="Assalto"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
 
 
     </LinearLayout>

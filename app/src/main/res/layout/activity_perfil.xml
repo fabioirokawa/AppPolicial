@@ -15,7 +15,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="224dp"
-        android:background="@drawable/perfil_perigoso"
         app:layout_constraintEnd_toEndOf="@id/dadosPerfil"
         app:layout_constraintStart_toStartOf="@id/tSuspeitoNome"
         app:layout_constraintTop_toTopOf="parent"
@@ -55,41 +54,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/textPele"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_1"
-            android:gravity="center"
-            android:text="Cor da Pele"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/tSuspeitoPele"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_2"
-            android:gravity="center"
-            android:text="Branco"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/textCabelos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_1"
-            android:gravity="center"
-            android:text="Cor do Cabelo"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/tSuspeitoCabelo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_2"
-            android:gravity="center"
-            android:text="Castanhos"
-            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textCrime"
@@ -106,59 +70,11 @@
             android:layout_height="wrap_content"
             android:background="@drawable/perfil_back_2"
             android:gravity="center"
-            android:text="Assalto"
+            android:text="..."
 
             android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/textOlhos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_1"
-            android:gravity="center"
-            android:text="Cor dos Olhos"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/tSuspeitoOlhos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_2"
-            android:gravity="center"
-            android:text="Castanhos"
-            android:textSize="24sp" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/test2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="178dp"
-        android:layout_marginEnd="319dp"
-        android:text="marelo" />
-
-    <Button
-        android:id="@+id/test1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="107dp"
-
-        android:text="verde" />
-
-    <Button
-        android:id="@+id/test3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="259dp"
-        android:text="vermeio" />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,9 +29,12 @@ import java.util.ArrayList;
 
 public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
-    historico hhh = new historico();
     private Context nContext;
     int nResource;
+    Bitmap imageSus;
+    String nome;
+    String crime;
+    String peri;
 
     Double[] latlong = new Double[2];
 
@@ -43,10 +47,13 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String nome = getItem(position).getNome();
-        String crime = getItem(position).getCrime();
-        Bitmap imageSus = getItem(position).getFotoDoSuspeito();
-        String peri = getItem(position).getPericulosidade();
+        nome = getItem(position).getNome();
+
+        crime = getItem(position).getCrime();
+
+        imageSus = getItem(position).getFotoDoSuspeito();
+
+        peri = getItem(position).getPericulosidade();
         Double localizacao[] = getItem(position).getLocalizacao();
 
         Suspeito DadosHist = new Suspeito(nome, crime, peri, imageSus, localizacao[0], localizacao[1]);
@@ -57,7 +64,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         Button bMapa = (Button) convertView.findViewById(R.id.bMapsHist);
         TextView tvNome = (TextView) convertView.findViewById(R.id.textNome);
         TextView tvCrime = (TextView) convertView.findViewById(R.id.textCrime);
-        ImageView ivSus = (ImageView) convertView.findViewById(R.id.imageSus);
+        ImageButton ivSus = (ImageButton) convertView.findViewById(R.id.imageSus);
 
 
 
@@ -74,12 +81,31 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
                 nContext.startActivity(intent);
             }
         });
+
         tvNome.setText(nome);
         tvCrime.setText(crime);
         ivSus.setImageBitmap(imageSus);
 
+        TextView pNome = (TextView) convertView.findViewById(R.id.tSuspeitoNome);
+        TextView pCrime = (TextView) convertView.findViewById(R.id.tSuspeitoCrime);
+        //pericu Alto Medio Baixo
+
+<<<<<<< HEAD
+        ivSus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(nContext, perfil.class);
+                intent.putExtra("pNome", nome);
+                intent.putExtra("pCrime", crime);
+                intent.putExtra("pPerigo", peri);
+                intent.putExtra("pFoto", imageSus);
+                nContext.startActivity(intent);
+            }
+        });
+
         return convertView;
     }
-
+=======
+>>>>>>> c90667b7949c7521da509f5d885a381e414777c1
 
 }
