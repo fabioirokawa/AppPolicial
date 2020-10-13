@@ -72,9 +72,12 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
             @Override
             public void onClick(View view) {
-                ObtemLocal local = new ObtemLocal();
-                latlong = local.getLocalizacao();
-
+            	try {
+					ObtemLocal local = new ObtemLocal();
+					latlong = local.getLocalizacao(getContext());
+				}catch (Exception e){
+            		e.printStackTrace();
+				}
                 Intent intent = new Intent(nContext, LocalMaps.class);
                 intent.putExtra("Latitude", latlong[0]);
                 intent.putExtra("Longitude", latlong[1]);
