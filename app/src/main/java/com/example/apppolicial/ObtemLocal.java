@@ -22,20 +22,20 @@ public class ObtemLocal extends AppCompatActivity {
         client = LocationServices.getFusedLocationProviderClient(this);
         final Double[] latlong = {0.0, 0.0};
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-        }
-        Task<Location> task = client.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null)
-                {
-                    latlong[0] = location.getLatitude();
-                    latlong[1] = location.getLongitude();
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            Task<Location> task = client.getLastLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if(location != null)
+                    {
+                        //latlong[0] = location.getLatitude();
+                        //latlong[1] = location.getLongitude();
+                    }
                 }
-            }
-        });
+            });
+        }
         return latlong;
 
     }
