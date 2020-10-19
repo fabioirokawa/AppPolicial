@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,28 +19,27 @@ import com.google.android.gms.tasks.Task;
 public class ObtemLocal extends AppCompatActivity {
 
     FusedLocationProviderClient client;
+    private double longitude;
+	private double latitude;
 
     public Double[] getLocalizacao(Context context) {
 
         client = LocationServices.getFusedLocationProviderClient(context);
-        final Double[] latlong = {0.0, 0.0};
+		LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
         if(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
-            Task<Location> task = client.getLastLocation();
-            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if(location != null)
-                    {
-                        latlong[0] = location.getLatitude();
-                        latlong[1] = location.getLongitude();
-                        Log.i("COORDINATES",latlong[0].toString()+"/"+latlong[1].toString());
-                    }
-                }
-            });
-        }
-        return latlong;
+			Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			if(location == null){
+				Log.d("TAG", "Failed to retrieve location");
+				return new Double[]{0.0, 0.0};
+			}
+			latitude = location.getLatitude();
+			longitude = location.getLongitude();
+			Log.d("TAG", String.valueOf(latitude)+","+ longitude);
+
+		}
+        return new Double[]{latitude, longitude};
 
     }
 }

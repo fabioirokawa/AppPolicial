@@ -42,7 +42,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class camera extends AppCompatActivity {
-	private int STORAGE_PERMISSION_CODE = 1;
+	private int ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE = 1;
 
 	private BufferedReader in = null;
 	private String dTextName = "";
@@ -50,17 +50,24 @@ public class camera extends AppCompatActivity {
 	private Thread clientThread;
 	private String hNomeSuspeito;
 	private Bitmap hRostoSuspeito;
+	private Button buttonProfile;
+	private String[] permissions = new String[] {
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.ACCESS_FINE_LOCATION,
+			Manifest.permission.ACCESS_COARSE_LOCATION};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
-		if (!(ContextCompat.checkSelfPermission(camera.this,
-				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-			requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
-		}//Verifica se app já tem permissão para gravar arquivos
+		//Verifica se app já tem permissão para gravar arquivos e localização
+		ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
 
-		Button buttonProfile = findViewById(R.id.botaoPerfil);
+
+		buttonProfile = findViewById(R.id.botaoPerfil);
+		buttonProfile.setVisibility(View.INVISIBLE);
+
 		Button buttonHistory = findViewById(R.id.botaoHistorico);
 		Button buttonForm = findViewById(R.id.formula);
 
@@ -216,6 +223,7 @@ public class camera extends AppCompatActivity {
 
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
+							buttonProfile.setVisibility(View.VISIBLE);
 
 						}
 					});
@@ -257,41 +265,17 @@ public class camera extends AppCompatActivity {
     }
 
 
-    private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(camera.this,
-                                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == STORAGE_PERMISSION_CODE)  {
+        if (requestCode == ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE)  {
+
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Obrigado", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Precisamos dessa permissao!", Toast.LENGTH_SHORT).show();
-                requestStoragePermission();
-            }
+                Toast.makeText(this, "Precisamos dessas permissoes!", Toast.LENGTH_SHORT).show();
+				ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
+			}
         }
     }
 
