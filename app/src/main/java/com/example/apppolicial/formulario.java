@@ -203,35 +203,43 @@ public class formulario extends AppCompatActivity {
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.PNG,100,stream);
+				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.JPEG,100,stream);
 				byte[] byteArray = stream.toByteArray();
 
-				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
+				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
 
 				na.progressNotification(formulario.this,"Enviando dados","Aguarde...");
 				OutputStream outputStream = socket.getOutputStream();
 				outputStream.write(texto.getBytes(StandardCharsets.UTF_8));
-				outputStream.flush();
+
 
 
 				DataOutputStream out = new DataOutputStream(outputStream);
 				out.write(byteArray,0,byteArray.length );
-				out.flush();
 
 				Log.i("[INFO]","Arquivo enviado");
+
 				socket.close();
+				out.flush();
+				outputStream.flush();
+
 				na.cancelNotification(formulario.this,2);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						sendDialog.dismiss();
+					}
+				});
 				na.alertNotification(formulario.this,"Finalizado","Dados enviados");
+
 			}
 			catch (UnknownHostException | SocketTimeoutException e){
 				na.cancelNotification(formulario.this,2);
 				na.errorNotification(formulario.this,"ERRO","Falha ao enviar");
-				sendTread.interrupt();
-			} catch (IOException e) {
+			}catch (IOException e) {
 				e.printStackTrace();
 				na.cancelNotification(formulario.this,2);
 				na.errorNotification(formulario.this,"ERRO","Falha ao enviar");
-				sendTread.interrupt();
 			}
 			finally {
 				runOnUiThread(new Runnable() {
@@ -240,6 +248,7 @@ public class formulario extends AppCompatActivity {
 						sendDialog.dismiss();
 					}
 				});
+				sendTread.interrupt();
 			}
 
 		}
