@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,12 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class historico extends AppCompatActivity implements android.location.LocationListener {
 	int i = 0;
@@ -91,16 +83,21 @@ public class historico extends AppCompatActivity implements android.location.Loc
 
 		Bundle b = getIntent().getExtras();
 
-		nomeSuspeito = b.getString("a");
-		Bitmap rostoSuspeito = getIntent().getParcelableExtra("b");
+		nomeSuspeito = b.getString("name");
+		String idadeDoSuspeito = b.getString("age");
+		String nivelPerigoDoSuspeito = b.getString("dangerLevel");
+		String[] listaDeCrimesDoSuspeito = b.getStringArray("crimes");
+		String probabilidadeDoSuspeito = b.getString("probability");
+		Bitmap rostoSuspeito = getIntent().getParcelableExtra("face");
 
-		if(b.getString("a") == null)
+
+		if(b.getString("name") == null)
 		{
 			nomeSuspeito = "";
 		}
 		if (!(nomeSuspeito.equals(anteriorTemp)))
 		{
-			suspeitos[i] = new Suspeito(nomeSuspeito, "Crime cometido","Alto", rostoSuspeito, 0.0, 0.0);
+			suspeitos[i] = new Suspeito(nomeSuspeito,Integer.parseInt(idadeDoSuspeito), listaDeCrimesDoSuspeito, nivelPerigoDoSuspeito, rostoSuspeito, latitude, longitude);
 			histDadosList.add(suspeitos[j]);
 			j++;
 			anteriorTemp = nomeSuspeito;

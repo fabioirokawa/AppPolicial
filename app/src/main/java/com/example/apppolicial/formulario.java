@@ -1,32 +1,22 @@
 package com.example.apppolicial;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -43,14 +33,13 @@ import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class formulario extends AppCompatActivity {
 
 	private EditText crime;
 	private AutoCompleteTextView peri;
 	private EditText name;
+	private EditText age;
 	private Bitmap dBitmap = null;
 
 	private NotifyAlert na = new NotifyAlert();
@@ -66,6 +55,7 @@ public class formulario extends AppCompatActivity {
 		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
 		sendDialog = new AlertDialog.Builder(this).setTitle("Enviando").setView(R.layout.my_dialog).setCancelable(false).create();
 		name = findViewById(R.id.formName);
+		age = findViewById(R.id.formAge);
 		crime = findViewById(R.id.formCrime);
 		peri = findViewById(R.id.formPeri);
 
@@ -130,7 +120,10 @@ public class formulario extends AppCompatActivity {
 			crime.setError("Preencha todos os dados");
 			return;
 		}
-
+		if(age.getText().toString().isEmpty()) {
+			age.setError("Preencha todos os dados");
+			return;
+		}
 		if(peri.getText().toString().equals("Nivel de perigo")){
 			peri.setError("Preencha todos os dados");
 			return;
@@ -140,9 +133,9 @@ public class formulario extends AppCompatActivity {
 			return;
 		}
 
-
-
-		Suspeito cadastro = new Suspeito(name.getText().toString(),crime.getText().toString(), peri.getText().toString(),dBitmap, 0.0, 0.0);
+		//TODO make an interface to collect all crimes, and make a list
+		String[] crimes = new String[]{crime.getText().toString()};
+		Suspeito cadastro = new Suspeito(name.getText().toString(), Integer.parseInt(age.getText().toString()), crimes, peri.getText().toString(), dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
 		sendTread.start();
 	}
@@ -206,7 +199,14 @@ public class formulario extends AppCompatActivity {
 				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.JPEG,100,stream);
 				byte[] byteArray = stream.toByteArray();
 
-				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
+
+				String[] crimes = dados.getCrimes();
+				String tCrime = "";
+
+				for(String cr : crimes){
+					tCrime = ";"+cr;
+				}
+				String texto = (byteArray.length + "/" + tCrime + "/" + dados.getPericulosidade() + "/" + dados.getNome()+"/"+ dados.getIdadeDoSuspeito()) ;
 
 				na.progressNotification(formulario.this,"Enviando dados","Aguarde...");
 				OutputStream outputStream = socket.getOutputStream();

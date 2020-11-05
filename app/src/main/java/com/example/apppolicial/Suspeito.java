@@ -8,15 +8,17 @@ public class Suspeito {
 
     private Bitmap fotoDoSuspeito;
     private String nome= "";
-    private String crime= "";
+    private String[] crimes;
+    private int idadeDoSuspeito;
     private String periculosidade="";
-    private Double latitude;
-    private Double longitude;
+    private double latitude;
+    private double longitude;
 
 
-    public Suspeito(String nome, String crime,String periculosidade, Bitmap imgSus, Double latitude, Double longitude) {
+    public Suspeito(String nome, int idade,String[] crimes,String periculosidade, Bitmap imgSus, double latitude, double longitude) {
         this.nome = nome;
-        this.crime = crime;
+        this.crimes = crimes;
+        this.idadeDoSuspeito = idade;
         this.fotoDoSuspeito = imgSus;
         this.periculosidade = periculosidade;
         this.latitude = latitude;
@@ -27,8 +29,8 @@ public class Suspeito {
         return nome;
     }
 
-    public String getCrime(){
-        return crime;
+    public String[] getCrimes(){
+        return crimes;
     }
 
     public Bitmap getFotoDoSuspeito(){
@@ -39,7 +41,10 @@ public class Suspeito {
 		return periculosidade;
 	}
 
-	public Double[] getLocalizacao() { Double[] loc = {latitude, longitude}; return loc;}
+	public Double[] getLocalizacao() {
+		return new Double[]{latitude, longitude};}
 
-
+	public int getIdadeDoSuspeito() {
+		return idadeDoSuspeito;
+	}
 }

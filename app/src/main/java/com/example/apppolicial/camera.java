@@ -48,8 +48,13 @@ public class camera extends AppCompatActivity {
 	private String dTextName = "";
 	private Bitmap dBitmap;
 	private Thread clientThread;
-	private String hNomeSuspeito;
 	private Bitmap hRostoSuspeito;
+	private String nomeDoSuspeito;
+	private String idadeDoSuspeito;
+	private String nivelPerigoDoSuspeito;
+	private String[] listaDeCrimesDoSuspeito;
+	private String horaDeteccaoSuspeito;
+	private String probabilidadeDoSuspeito;
 	private Button buttonProfile;
 	private String[] permissions = new String[] {
 			Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -101,8 +106,13 @@ public class camera extends AppCompatActivity {
 	public void goToHist(){
 		Intent intent = new Intent (this, historico.class);
 		Bundle b = new Bundle();
-		b.putString("a", hNomeSuspeito);
-		intent.putExtra("b", hRostoSuspeito);
+		b.putString("name", nomeDoSuspeito);
+		intent.putExtra("face", hRostoSuspeito);
+		b.putString("probability", probabilidadeDoSuspeito);
+		b.putString("time", horaDeteccaoSuspeito);
+		b.putString("age", idadeDoSuspeito);
+		b.putString("dangerLevel", nivelPerigoDoSuspeito);
+		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
 		intent.putExtras(b);
 		startActivity(intent);
 	}
@@ -128,6 +138,8 @@ public class camera extends AppCompatActivity {
 		NotifyAlert notifyAlert = new NotifyAlert();
 		FileOutputStream fos;
 		BufferedOutputStream bos;
+
+
 
 		MyServer(Context c){
             context = c;
@@ -169,15 +181,23 @@ public class camera extends AppCompatActivity {
 
 						mensagemSeparada = message.split("\n");
 
-						File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
-						String nome = mensagemSeparada[0] + mensagemSeparada[2];
-						pathFrame = new File(mydir, nome + ".bmp");
-						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
-						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
+						nomeDoSuspeito = mensagemSeparada[0];
+						idadeDoSuspeito = mensagemSeparada[1];
+						nivelPerigoDoSuspeito = mensagemSeparada[2];
+						listaDeCrimesDoSuspeito = mensagemSeparada[3].split(";");
+						horaDeteccaoSuspeito = mensagemSeparada[4];
+						probabilidadeDoSuspeito = mensagemSeparada[5];
+
+
+						File mydir = context.getDir(nomeDoSuspeito, Context.MODE_PRIVATE);
+						String timestampNome = nomeDoSuspeito + horaDeteccaoSuspeito;
+						pathFrame = new File(mydir, timestampNome + ".bmp");
+						pathFaceCrop = new File(mydir, timestampNome+ "_face_crop.bmp");
+						pathMatchDataset = new File(mydir, timestampNome + "_best_match.bmp");
 					}
 
 					//Notificacao
-					notifyAlert.alertNotification(context,"Alerta",mensagemSeparada[0]+ " detectado!");
+					notifyAlert.alertNotification(context,"Alerta",nomeDoSuspeito+ " detectado!");
 
 				}
 				catch (IOException ex){
@@ -218,11 +238,9 @@ public class camera extends AppCompatActivity {
 							}
 
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-							textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
-							hNomeSuspeito = mensagemSeparada[0];
-
+							textViewName.setText(String.format("%s %s", getString(R.string.name_main), nomeDoSuspeito));
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
+							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), probabilidadeDoSuspeito));
 							buttonProfile.setVisibility(View.VISIBLE);
 
 						}

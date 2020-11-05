@@ -15,8 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class perfil extends AppCompatActivity {
 
-    String PNome, PCrime, PPeri;
+    String PNome, PPeri;
     Bitmap PFoto;
+	String[] PCrime;
 
     private ImageView ivFoto;
     private TextView tvPNome, tvPCrime;
@@ -24,8 +25,10 @@ public class perfil extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
+
+
         PNome = intent.getStringExtra("pNome");
-        PCrime = intent.getStringExtra("pCrime");
+        PCrime = intent.getStringArrayExtra("pCrime");
         PPeri = intent.getStringExtra("pPerigo");
         PFoto = intent.getParcelableExtra("pFoto");
 
@@ -38,7 +41,7 @@ public class perfil extends AppCompatActivity {
 
         ivFoto.setImageBitmap(PFoto);
         tvPNome.setText(PNome);
-        tvPCrime.setText(PCrime);
+        tvPCrime.setText(PCrime[0]);
 
 		switch (PPeri) {
 			case "Alto":
