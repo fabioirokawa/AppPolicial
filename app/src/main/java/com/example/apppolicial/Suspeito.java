@@ -2,66 +2,49 @@ package com.example.apppolicial;
 
 import android.graphics.Bitmap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class Suspeito {
 
-	private static List<String> coresDaPele = Arrays.asList("Pardo","Branco","Negro","Amarelo");
-
-
-
     private Bitmap fotoDoSuspeito;
     private String nome= "";
-    private String crime= "";
-    private double periculosidade=0;
-	private String corDaPele = "";
+    private String[] crimes;
+    private int idadeDoSuspeito;
+    private String periculosidade="";
+    private double latitude;
+    private double longitude;
 
 
-    public Suspeito(String nome, String crime, Bitmap imgSus) {
+    public Suspeito(String nome, int idade,String[] crimes,String periculosidade, Bitmap imgSus, double latitude, double longitude) {
         this.nome = nome;
-        this.crime = crime;
+        this.crimes = crimes;
+        this.idadeDoSuspeito = idade;
         this.fotoDoSuspeito = imgSus;
+        this.periculosidade = periculosidade;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getNome(){
         return nome;
     }
 
-    public void setNome(String nome){
-        this.nome = nome;
-    }
-
-    public String getCrime(){
-        return crime;
-    }
-
-    public void setCrime(String crime) {
-        this.crime = crime;
+    public String[] getCrimes(){
+        return crimes;
     }
 
     public Bitmap getFotoDoSuspeito(){
         return fotoDoSuspeito;
     }
 
-    public void setFotoDoSuspeito(Bitmap fotoDoSuspeito) {
-        this.fotoDoSuspeito = fotoDoSuspeito;
-    }
-
-    public double getPericulosidade() {
+    public String getPericulosidade() {
 		return periculosidade;
 	}
 
-	public void setPericulosidade(double periculosidade) {
-		this.periculosidade = periculosidade;
-	}
+	public Double[] getLocalizacao() {
+		return new Double[]{latitude, longitude};}
 
-	public String getCorDaPele() {
-		return corDaPele;
-	}
-
-	public void setCorDaPele(String corDaPele) {
-		this.corDaPele = corDaPele;
+	public int getIdadeDoSuspeito() {
+		return idadeDoSuspeito;
 	}
 }

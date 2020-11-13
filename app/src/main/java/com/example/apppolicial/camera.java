@@ -8,70 +8,85 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
-import android.text.InputType;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 
-public class camera extends AppCompatActivity {
-    private int STORAGE_PERMISSION_CODE = 1;
-	static final int REQUEST_PHOTO_FROM_STORAGE = 1;
-	static final int REQUEST_IMAGE_CAPTURE = 2;
-    private BufferedReader in = null;
+public class camera extends AppCompatActivity implements android.location.LocationListener{
+	private int ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE = 1;
+
+	private BufferedReader in = null;
 	private String dTextName = "";
 	private Bitmap dBitmap;
-	Thread clientThread;
+	private Thread clientThread;
+	private Bitmap hRostoSuspeito;
+	private String nomeDoSuspeito;
+	private String idadeDoSuspeito;
+	private String nivelPerigoDoSuspeito;
+	private String[] listaDeCrimesDoSuspeito;
+	private String horaDeteccaoSuspeito;
+	private String probabilidadeDoSuspeito;
+	private Button buttonProfile;
+	private double longitude;
+	private double latitude;
+	private LocationManager lm;
+	private String[] permissions = new String[] {
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.ACCESS_FINE_LOCATION,
+			Manifest.permission.ACCESS_COARSE_LOCATION};
+
 
 	@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
-		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_camera);
+		//Verifica se app já tem permissão para gravar arquivos e localização
+		ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
 
-		if (!(ContextCompat.checkSelfPermission(camera.this,
-				Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
-			requestStoragePermission();//Caso não tenha requisita permissão (salvar as imagens)
-		}//Verifica se app já tem permissão para gravar arquivos
 
-		Button buttonProfile = findViewById(R.id.botaoPerfil);
+		buttonProfile = findViewById(R.id.botaoPerfil);
+		buttonProfile.setVisibility(View.INVISIBLE);
+
 		Button buttonHistory = findViewById(R.id.botaoHistorico);
-		Button buttonReadPhoto = findViewById(R.id.botaoLer);
-		Button buttonTakePhoto = findViewById(R.id.botaoCamera);
+		Button buttonForm = findViewById(R.id.formula);
 
+		buttonForm.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				goToForm();
+			}
+		});
 		buttonProfile.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -84,39 +99,47 @@ public class camera extends AppCompatActivity {
 				goToHist();
 			}
 		});
-		buttonReadPhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) { //selecionar imagem do cel
-
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-				//intent.setType("download/*");
-				intent.setDataAndType(selectedUri, "image/*");
-
-				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), REQUEST_PHOTO_FROM_STORAGE);
-
-			}
-		});
-		buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
-			}
-		});
-
-
+		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
+			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		}
 		Thread myThread = new Thread(new MyServer(this));
 		myThread.start();//Inicia thread de conexão via socket
-    }
+	}
+
+	public void goToForm(){
+		Intent intent = new Intent (this, formulario.class);
+		startActivity(intent);
+	}
 
 	public void goToHist(){
 		Intent intent = new Intent (this, historico.class);
+		Bundle b = new Bundle();
+		b.putString("name", nomeDoSuspeito);
+		intent.putExtra("face", hRostoSuspeito);
+		b.putString("probability", probabilidadeDoSuspeito);
+		b.putString("time", horaDeteccaoSuspeito);
+		b.putString("age", idadeDoSuspeito);
+		b.putString("dangerLevel", nivelPerigoDoSuspeito);
+		double[] locations = {latitude, longitude};
+		b.putDoubleArray("locations",locations);
+		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
+		intent.putExtras(b);
 		startActivity(intent);
 	}
 
 	public void goToPerf(){
 		Intent intent = new Intent (this, perfil.class);
+		Bundle b = new Bundle();
+		b.putString("name", nomeDoSuspeito);
+		intent.putExtra("face", hRostoSuspeito);
+		b.putString("probability", probabilidadeDoSuspeito);
+		b.putString("time", horaDeteccaoSuspeito);
+		b.putString("age", idadeDoSuspeito);
+		b.putString("dangerLevel", nivelPerigoDoSuspeito);
+		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
+		intent.putExtras(b);
 		startActivity(intent);
 	}
 
@@ -136,6 +159,8 @@ public class camera extends AppCompatActivity {
 		NotifyAlert notifyAlert = new NotifyAlert();
 		FileOutputStream fos;
 		BufferedOutputStream bos;
+
+
 
 		MyServer(Context c){
             context = c;
@@ -167,8 +192,6 @@ public class camera extends AppCompatActivity {
                     is = mySocket.getInputStream();
                     Log.i("[INFO]","Conectado");
 
-                    //Notificacao
-					notifyAlert.sendOnChannel1(context);
 
 					if(is!=null) {
 						bytesRead = is.read(aByte);
@@ -178,13 +201,28 @@ public class camera extends AppCompatActivity {
 						Log.i("[INFO]", "Bytes content: " + message);
 
 						mensagemSeparada = message.split("\n");
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								getLocalizacao();
+							}
+						});
+						nomeDoSuspeito = mensagemSeparada[0];
+						idadeDoSuspeito = mensagemSeparada[1];
+						nivelPerigoDoSuspeito = mensagemSeparada[2];
+						listaDeCrimesDoSuspeito = mensagemSeparada[3].split(";");
+						horaDeteccaoSuspeito = mensagemSeparada[4];
+						probabilidadeDoSuspeito = mensagemSeparada[5];
 
-						File mydir = context.getDir(mensagemSeparada[0], Context.MODE_PRIVATE);
-						String nome = mensagemSeparada[0] + mensagemSeparada[2];
-						pathFrame = new File(mydir, nome + ".bmp");
-						pathFaceCrop = new File(mydir, nome + "_face_crop.bmp");
-						pathMatchDataset = new File(mydir, nome + "_best_match.bmp");
+						File mydir = context.getDir(nomeDoSuspeito, Context.MODE_PRIVATE);
+						String timestampNome = nomeDoSuspeito + horaDeteccaoSuspeito;
+						pathFrame = new File(mydir, timestampNome + ".bmp");
+						pathFaceCrop = new File(mydir, timestampNome+ "_face_crop.bmp");
+						pathMatchDataset = new File(mydir, timestampNome + "_best_match.bmp");
 					}
+
+					//Notificacao
+					notifyAlert.alertNotification(context,"Alerta",nomeDoSuspeito+ " detectado!");
 
 				}
 				catch (IOException ex){
@@ -221,13 +259,14 @@ public class camera extends AppCompatActivity {
 								Bitmap bitmapMatchDataset = BitmapFactory.decodeFile(String.valueOf(pathMatchDataset));
 								ImageView imageViewMatchDataset = (ImageView) findViewById(R.id.imageMatchDataset);
 								imageViewMatchDataset.setImageBitmap(bitmapMatchDataset);
+								hRostoSuspeito = bitmapMatchDataset;
 							}
 
 							TextView textViewName = (TextView) findViewById(R.id.textViewNameOfSuspectMain);
-							textViewName.setText(String.format("%s %s", getString(R.string.name_main), mensagemSeparada[0]));
-
+							textViewName.setText(String.format("%s %s", getString(R.string.name_main), nomeDoSuspeito));
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
-							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), mensagemSeparada[2]));
+							textViewAccuracy.setText(String.format("%s %s", getString(R.string.accuracy_main), probabilidadeDoSuspeito));
+							buttonProfile.setVisibility(View.VISIBLE);
 
 						}
 					});
@@ -268,134 +307,46 @@ public class camera extends AppCompatActivity {
 		}
     }
 
+	public void getLocalizacao() {
+		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
-    private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(camera.this,
-                                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-        }
-    }
+		Log.d("LOCATION", "Requesting locations");
+		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			String[] locationPermissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
+			ActivityCompat.requestPermissions(this, locationPermissions, 1);
+			return;
+		}
+		if(!isGPSEnabled){
+			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		}else {
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			Location local = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			latitude = local.getLatitude();
+			longitude = local.getLongitude();
+		}
+	}
+	@Override
+	public void onLocationChanged(@NonNull Location location) {
+		latitude = location.getLatitude();
+		longitude = location.getLongitude();
+		Log.d("LOCATION", latitude + ":" + longitude);
+		lm.removeUpdates(this);
+	}
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == STORAGE_PERMISSION_CODE)  {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Obrigado", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Precisamos dessa permissao!", Toast.LENGTH_SHORT).show();
-                requestStoragePermission();
-            }
+        if (requestCode == ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE)  {
+
+            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(this, "Precisamos dessas permissoes!", Toast.LENGTH_SHORT).show();
+				ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
+			}
         }
     }
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			ImageView imageView = findViewById(R.id.imageFrame);
 
-			switch (requestCode) {
-
-				case REQUEST_IMAGE_CAPTURE:
-					Bundle extras = data.getExtras();
-					Bitmap bitmapCamera = (Bitmap) extras.get("data");
-					dBitmap = bitmapCamera;
-					imageView.setImageBitmap(bitmapCamera);
-					break;
-				case REQUEST_PHOTO_FROM_STORAGE:
-					try {
-						InputStream inputStream = getContentResolver().openInputStream(data.getData());
-						Bitmap bitmapStorage = BitmapFactory.decodeStream(inputStream);
-						dBitmap = bitmapStorage;
-						imageView.setImageBitmap(bitmapStorage);
-
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-					break;
-
-			}
-
-			clientThread = new Thread(new ClientThread(this,new Suspeito(dTextName,"CRIME",dBitmap)));
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setTitle("Digite o nome");
-					final EditText input = new EditText(this);
-					input.setInputType(InputType.TYPE_CLASS_TEXT);
-					builder.setView(input);
-					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dTextName = input.getText().toString();
-							clientThread.start();
-
-						}
-					});
-					builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dialogInterface.cancel();
-						}
-					});
-					builder.show();
-		}
-	}
-
-
-
-	class ClientThread implements Runnable{
-    	Suspeito dados;
-    	Context context;
-    	String SERVER_SOCKET = "";
-    	int SERVER_PORT = 5001;
-    	ClientThread(Context c,Suspeito dados){
-    		this.dados = dados;
-    		this.context = c;
-		}
-		@Override
-		public void run() {
-			try {
-				Socket socket = new Socket(SERVER_SOCKET, SERVER_PORT);
-
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-				dados.getFotoDoSuspeito().compress(Bitmap.CompressFormat.JPEG,100,stream);
-				byte[] byteArray = stream.toByteArray();
-
-				String texto = (byteArray.length + "/" + dados.getCrime() + "/" + dados.getCorDaPele() + "/" + dados.getPericulosidade() + "/" + dados.getNome()) ;
-
-				OutputStream outputStream = socket.getOutputStream();
-				outputStream.write(texto.getBytes(StandardCharsets.UTF_8));
-				outputStream.flush();
-
-
-				DataOutputStream out = new DataOutputStream(outputStream);
-				out.write(byteArray,0,byteArray.length  );
-				out.flush();
-
-				Log.i("[INFO]","Arquivo enviado");
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }

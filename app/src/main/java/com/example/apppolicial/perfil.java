@@ -1,49 +1,63 @@
 package com.example.apppolicial;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class perfil extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+
+
+		String PNome = intent.getStringExtra("name");
+		String[] PCrime = intent.getStringArrayExtra("crimes");
+		String PPeri = intent.getStringExtra("dangerLevel");
+		Bitmap PFoto = intent.getParcelableExtra("face");
+		String idade = intent.getStringExtra("age");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        final ImageView imageView = findViewById(R.id.perfilView);
+        ImageView ivFoto = findViewById(R.id.perfilView);
+		TextView tvPNome = findViewById(R.id.nomePerfil);
+		TextView tvPCrime = findViewById(R.id.crimesPerfil);
+        TextView tvPIdade = findViewById(R.id.idadePerfil);
+		TextView tvPPeri = findViewById(R.id.nivelPerigoPerfil);
+		String crimesList = "";
+        for (String c : PCrime){
+			crimesList += c + ", ";
+        }
 
-        //imageView.setImageResource(R.drawable.seloco);
-
-        Button b1 = findViewById(R.id.test1);
-        Button b2 = findViewById(R.id.test2);
-        Button b3 = findViewById(R.id.test3);
-
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView.setBackgroundResource(R.drawable.perfil_ok);
-            }
-        });
-
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView.setBackgroundResource(R.drawable.perfil_atencao);
-            }
-        });
-
-        b3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView.setBackgroundResource(R.drawable.perfil_perigoso);
-            }
-        });
+        ivFoto.setImageBitmap(PFoto);
+        tvPNome.setText(PNome);
+        tvPCrime.setText(crimesList);
+        tvPIdade.setText(idade);
+        tvPPeri.setText(PPeri);
 
 
+		switch (PPeri) {
+			case "Alto":
+				ivFoto.setBackgroundResource(R.drawable.perfil_perigoso);
+				break;
+			case "Medio":
+				ivFoto.setBackgroundResource(R.drawable.perfil_atencao);
+				break;
+			case "Baixo":
+				ivFoto.setBackgroundResource(R.drawable.perfil_ok);
+				break;
+		}
     }
-
 }
