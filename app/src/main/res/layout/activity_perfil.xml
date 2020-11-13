@@ -27,7 +27,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Perfil de Jonas"
+        android:text="Perfil do Suspeito"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,24 +51,80 @@
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <TextView
-            android:id="@+id/textCrime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_1"
-            android:gravity="center"
-            android:text="Crime Cometido"
-            android:textSize="24sp" />
+		<TextView
+			android:id="@+id/textNome"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_1"
+			android:gravity="center"
+			android:text="Nome"
+			android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/tSuspeitoCrime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/perfil_back_2"
-            android:gravity="center"
-            android:text="..."
+		<TextView
+			android:id="@+id/nomePerfil"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_2"
+			android:gravity="center"
+			android:text="..."
 
-            android:textSize="24sp" />
+			android:textSize="24sp" />
+
+		<TextView
+			android:id="@+id/textIdade"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_1"
+			android:gravity="center"
+			android:text="Idade"
+			android:textSize="24sp" />
+
+		<TextView
+			android:id="@+id/idadePerfil"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_2"
+			android:gravity="center"
+			android:text="..."
+
+			android:textSize="24sp" />
+		<TextView
+			android:id="@+id/textCrime"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_1"
+			android:gravity="center"
+			android:text="Crimes Cometidos"
+			android:textSize="24sp" />
+
+		<TextView
+			android:id="@+id/crimesPerfil"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_2"
+			android:gravity="center"
+			android:text="..."
+
+			android:textSize="24sp" />
+		<TextView
+			android:id="@+id/textPerigo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_1"
+			android:gravity="center"
+			android:text="Nivel de Perigo"
+			android:textSize="24sp" />
+
+		<TextView
+			android:id="@+id/nivelPerigoPerfil"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/perfil_back_2"
+			android:gravity="center"
+			android:text="..."
+
+			android:textSize="24sp" />
+
 
 
     </LinearLayout>

@@ -20,60 +20,18 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 
-public class historico extends AppCompatActivity implements android.location.LocationListener {
+public class historico extends AppCompatActivity {
 	int i = 0;
 	static String anteriorTemp = "";
 	static Suspeito[] suspeitos = new Suspeito[10];
 	static ArrayList<Suspeito> histDadosList = new ArrayList<>();
-	private double longitude;
-	private double latitude;
-	private LocationManager lm;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_historico);
-		getLocalizacao();
+
 	}
-
-	public void getLocalizacao() {
-		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-		Log.d("LOCATION", "Requesting locations");
-		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-			String[] locationPermissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
-			ActivityCompat.requestPermissions(this, locationPermissions, 1);
-			return;
-		}
-		if(!isGPSEnabled){
-			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
-			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-		}else {
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		}
-	}
-	@Override
-	public void onLocationChanged(@NonNull Location location) {
-		latitude = location.getLatitude();
-		longitude = location.getLongitude();
-		Log.d("LOCATION", String.valueOf(latitude) + "," + longitude);
-		lm.removeUpdates(this);
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			Toast.makeText(this, "Obrigado", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(this, "Precisamos dessas permissoes!", Toast.LENGTH_SHORT).show();
-			ActivityCompat.requestPermissions(this,permissions , 1);
-			getLocalizacao();
-		}
-	}
-
 
 	protected void onStart() {
 		super.onStart();
@@ -88,6 +46,7 @@ public class historico extends AppCompatActivity implements android.location.Loc
 		String nivelPerigoDoSuspeito = b.getString("dangerLevel");
 		String[] listaDeCrimesDoSuspeito = b.getStringArray("crimes");
 		String probabilidadeDoSuspeito = b.getString("probability");
+		double[] locations = b.getDoubleArray("locations");
 		Bitmap rostoSuspeito = getIntent().getParcelableExtra("face");
 
 
@@ -97,7 +56,7 @@ public class historico extends AppCompatActivity implements android.location.Loc
 		}
 		if (!(nomeSuspeito.equals(anteriorTemp)))
 		{
-			suspeitos[i] = new Suspeito(nomeSuspeito,Integer.parseInt(idadeDoSuspeito), listaDeCrimesDoSuspeito, nivelPerigoDoSuspeito, rostoSuspeito, latitude, longitude);
+			suspeitos[i] = new Suspeito(nomeSuspeito,Integer.parseInt(idadeDoSuspeito), listaDeCrimesDoSuspeito, nivelPerigoDoSuspeito, rostoSuspeito, locations[0], locations[1]);
 			histDadosList.add(suspeitos[j]);
 			j++;
 			anteriorTemp = nomeSuspeito;

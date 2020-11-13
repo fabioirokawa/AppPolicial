@@ -14,11 +14,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +43,7 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class camera extends AppCompatActivity {
+public class camera extends AppCompatActivity implements android.location.LocationListener{
 	private int ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE = 1;
 
 	private BufferedReader in = null;
@@ -56,6 +58,9 @@ public class camera extends AppCompatActivity {
 	private String horaDeteccaoSuspeito;
 	private String probabilidadeDoSuspeito;
 	private Button buttonProfile;
+	private double longitude;
+	private double latitude;
+	private LocationManager lm;
 	private String[] permissions = new String[] {
 			Manifest.permission.READ_EXTERNAL_STORAGE,
 			Manifest.permission.ACCESS_FINE_LOCATION,
@@ -94,6 +99,11 @@ public class camera extends AppCompatActivity {
 				goToHist();
 			}
 		});
+		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
+			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		}
 		Thread myThread = new Thread(new MyServer(this));
 		myThread.start();//Inicia thread de conexão via socket
 	}
@@ -112,6 +122,8 @@ public class camera extends AppCompatActivity {
 		b.putString("time", horaDeteccaoSuspeito);
 		b.putString("age", idadeDoSuspeito);
 		b.putString("dangerLevel", nivelPerigoDoSuspeito);
+		double[] locations = {latitude, longitude};
+		b.putDoubleArray("locations",locations);
 		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
 		intent.putExtras(b);
 		startActivity(intent);
@@ -119,6 +131,15 @@ public class camera extends AppCompatActivity {
 
 	public void goToPerf(){
 		Intent intent = new Intent (this, perfil.class);
+		Bundle b = new Bundle();
+		b.putString("name", nomeDoSuspeito);
+		intent.putExtra("face", hRostoSuspeito);
+		b.putString("probability", probabilidadeDoSuspeito);
+		b.putString("time", horaDeteccaoSuspeito);
+		b.putString("age", idadeDoSuspeito);
+		b.putString("dangerLevel", nivelPerigoDoSuspeito);
+		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
+		intent.putExtras(b);
 		startActivity(intent);
 	}
 
@@ -180,14 +201,18 @@ public class camera extends AppCompatActivity {
 						Log.i("[INFO]", "Bytes content: " + message);
 
 						mensagemSeparada = message.split("\n");
-
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								getLocalizacao();
+							}
+						});
 						nomeDoSuspeito = mensagemSeparada[0];
 						idadeDoSuspeito = mensagemSeparada[1];
 						nivelPerigoDoSuspeito = mensagemSeparada[2];
 						listaDeCrimesDoSuspeito = mensagemSeparada[3].split(";");
 						horaDeteccaoSuspeito = mensagemSeparada[4];
 						probabilidadeDoSuspeito = mensagemSeparada[5];
-
 
 						File mydir = context.getDir(nomeDoSuspeito, Context.MODE_PRIVATE);
 						String timestampNome = nomeDoSuspeito + horaDeteccaoSuspeito;
@@ -282,15 +307,41 @@ public class camera extends AppCompatActivity {
 		}
     }
 
+	public void getLocalizacao() {
+		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+
+		Log.d("LOCATION", "Requesting locations");
+		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			String[] locationPermissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
+			ActivityCompat.requestPermissions(this, locationPermissions, 1);
+			return;
+		}
+		if(!isGPSEnabled){
+			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		}else {
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			Location local = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			latitude = local.getLatitude();
+			longitude = local.getLongitude();
+		}
+	}
+	@Override
+	public void onLocationChanged(@NonNull Location location) {
+		latitude = location.getLatitude();
+		longitude = location.getLongitude();
+		Log.d("LOCATION", latitude + ":" + longitude);
+		lm.removeUpdates(this);
+	}
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE)  {
 
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Obrigado", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 Toast.makeText(this, "Precisamos dessas permissoes!", Toast.LENGTH_SHORT).show();
 				ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
 			}

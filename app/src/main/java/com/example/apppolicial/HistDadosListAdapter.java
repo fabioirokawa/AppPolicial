@@ -46,7 +46,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
         peri = getItem(position).getPericulosidade();
         idade = getItem(position).getIdadeDoSuspeito();
-        Double localizacao[] = getItem(position).getLocalizacao();
+        final Double localizacao[] = getItem(position).getLocalizacao();
 
         Suspeito DadosHist = new Suspeito(nome,idade , crimes, peri, imageSus, localizacao[0], localizacao[1]);
 
@@ -65,8 +65,8 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(nContext, LocalMaps.class);
-                intent.putExtra("Latitude", latlong[0]);
-                intent.putExtra("Longitude", latlong[1]);
+                intent.putExtra("Latitude", localizacao[0]);
+                intent.putExtra("Longitude", localizacao[1]);
                 nContext.startActivity(intent);
             }
         });
@@ -79,10 +79,12 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(nContext, perfil.class);
-                intent.putExtra("pNome", nome);
-                intent.putExtra("pCrime", crimes);
-                intent.putExtra("pPerigo", peri);
-				intent.putExtra("pFoto", imageSus);
+                Bundle b = new Bundle();
+                b.putString("name", nome);
+                b.putStringArray("crimes", crimes);
+                b.putString("dangerLevel", peri);
+				intent.putExtra("face", imageSus);
+				intent.putExtras(b);
                 nContext.startActivity(intent);
             }
         });

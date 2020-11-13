@@ -15,33 +15,38 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class perfil extends AppCompatActivity {
 
-    String PNome, PPeri;
-    Bitmap PFoto;
-	String[] PCrime;
 
-    private ImageView ivFoto;
-    private TextView tvPNome, tvPCrime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
 
 
-        PNome = intent.getStringExtra("pNome");
-        PCrime = intent.getStringArrayExtra("pCrime");
-        PPeri = intent.getStringExtra("pPerigo");
-        PFoto = intent.getParcelableExtra("pFoto");
+		String PNome = intent.getStringExtra("name");
+		String[] PCrime = intent.getStringArrayExtra("crimes");
+		String PPeri = intent.getStringExtra("dangerLevel");
+		Bitmap PFoto = intent.getParcelableExtra("face");
+		String idade = intent.getStringExtra("age");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        ivFoto = findViewById(R.id.perfilView);
-        tvPNome = findViewById(R.id.tSuspeitoNome);
-        tvPCrime = findViewById(R.id.tSuspeitoCrime);
+        ImageView ivFoto = findViewById(R.id.perfilView);
+		TextView tvPNome = findViewById(R.id.nomePerfil);
+		TextView tvPCrime = findViewById(R.id.crimesPerfil);
+        TextView tvPIdade = findViewById(R.id.idadePerfil);
+		TextView tvPPeri = findViewById(R.id.nivelPerigoPerfil);
+		String crimesList = "";
+        for (String c : PCrime){
+			crimesList += c + ", ";
+        }
 
         ivFoto.setImageBitmap(PFoto);
         tvPNome.setText(PNome);
-        tvPCrime.setText(PCrime[0]);
+        tvPCrime.setText(crimesList);
+        tvPIdade.setText(idade);
+        tvPPeri.setText(PPeri);
+
 
 		switch (PPeri) {
 			case "Alto":
