@@ -29,7 +29,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
     String[] crimes;
     String peri;
     int idade;
-    String idadeS;
+    String crimesS = "";
     ListView listview;
 
     Double[] latlong = new Double[2];
@@ -84,7 +84,16 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         });
 
         tvNome.setText(nome);
-        tvCrime.setText(crimes[position]);
+        for (String c : crimes){
+            if (c != null) crimesS += c + ", ";
+        }
+        crimesS += "!";
+        crimesS = crimesS.replace(", !","");
+        crimesS = crimesS.replace(", , ","!!");
+        crimesS = crimesS.replace(" , ","");
+        crimesS = crimesS.replace("!!",", ");
+
+        tvCrime.setText(crimesS);
         ivSus.setImageBitmap(imageSus);
         Log.d("1111111111111111" , nome + "//" + crimes + "//" + idade);
 

@@ -42,7 +42,9 @@ public class perfil extends AppCompatActivity {
         }
         crimesList += "!";
 		crimesList = crimesList.replace(", !","");
-		crimesList = crimesList.replace(", , ",", ");
+		crimesList = crimesList.replace(", , ","!!");
+		crimesList = crimesList.replace(" , ","");
+		crimesList = crimesList.replace("!!",", ");
 		//crimesList = crimesList.trim();
 
         ivFoto.setImageBitmap(PFoto);
