@@ -38,8 +38,12 @@ public class perfil extends AppCompatActivity {
 		TextView tvPPeri = findViewById(R.id.nivelPerigoPerfil);
 		String crimesList = "";
         for (String c : PCrime){
-			crimesList += c + ", ";
+        	if (c != null) crimesList += c + ", ";
         }
+        crimesList += "!";
+		crimesList = crimesList.replace(", !","");
+		crimesList = crimesList.replace(", , ",", ");
+		//crimesList = crimesList.trim();
 
         ivFoto.setImageBitmap(PFoto);
         tvPNome.setText(PNome);

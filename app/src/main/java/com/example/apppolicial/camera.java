@@ -324,8 +324,15 @@ public class camera extends AppCompatActivity implements android.location.Locati
 		}else {
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 			Location local = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			latitude = local.getLatitude();
-			longitude = local.getLongitude();
+			if (local != null){
+				latitude = local.getLatitude();
+				longitude = local.getLongitude();
+			}
+			else{
+				//This is what you need:
+				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+			}
+
 		}
 	}
 	@Override

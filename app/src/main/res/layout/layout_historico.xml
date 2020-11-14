@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textNome"
+            android:id="@+id/layTextNome"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
@@ -30,7 +30,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textCrime"
+            android:id="@+id/layTextCrime"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"

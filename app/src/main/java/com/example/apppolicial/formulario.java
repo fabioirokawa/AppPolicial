@@ -172,7 +172,7 @@ public class formulario extends AppCompatActivity {
 
 	class ClientThread implements Runnable{
 		Suspeito dados;
-		String SERVER_SOCKET = "192.168.1.113"; //ip maquina
+		String SERVER_SOCKET = "192.168.0.18"; //ip maquina
 		int SERVER_PORT = 5001;
 
 
@@ -206,7 +206,7 @@ public class formulario extends AppCompatActivity {
 				for(String cr : crimes){
 					tCrime = ";"+cr;
 				}
-				String texto = (byteArray.length + "/" + tCrime + "/" + dados.getPericulosidade() + "/" + dados.getNome()+"/"+ dados.getIdadeDoSuspeito()) ;
+				String texto = (byteArray.length + "/" + tCrime + "/" + dados.getPericulosidade() + "/" + dados.getNome()+"/"+ dados.getIdadeDoSuspeito() + "&") ;
 
 				na.progressNotification(formulario.this,"Enviando dados","Aguarde...");
 				OutputStream outputStream = socket.getOutputStream();
