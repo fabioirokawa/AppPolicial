@@ -54,6 +54,7 @@ public class historico extends AppCompatActivity {
 		{
 			nomeSuspeito = "";
 		}
+
 		if (!(nomeSuspeito.equals(anteriorTemp)))
 		{
 			suspeitos[i] = new Suspeito(nomeSuspeito,Integer.parseInt(idadeDoSuspeito), listaDeCrimesDoSuspeito, nivelPerigoDoSuspeito, rostoSuspeito, locations[0], locations[1]);
@@ -63,12 +64,14 @@ public class historico extends AppCompatActivity {
 			HistDadosListAdapter adapter = new HistDadosListAdapter(this, R.layout.layout_historico, histDadosList);
 			ListView mListView = findViewById(R.id.histList);
 			mListView.setAdapter(adapter);
+			adapter.notifyDataSetChanged();
 		}
 		else
 		{
 			HistDadosListAdapter adapter = new HistDadosListAdapter(this, R.layout.layout_historico, histDadosList);
 			ListView mListView = findViewById(R.id.histList);
 			mListView.setAdapter(adapter);
+			adapter.notifyDataSetChanged();
 		}
 		i++;
 	}

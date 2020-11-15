@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,11 +23,14 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
     private Context nContext;
     int nResource;
+    ArrayList<Suspeito> nObjects;
     Bitmap imageSus;
     String nome;
     String[] crimes;
     String peri;
     int idade;
+    String crimesS = "";
+    ListView listview;
 
     Double[] latlong = new Double[2];
 
@@ -33,11 +38,13 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         super(context, resource, objects);
         nContext = context;
         nResource = resource;
+        nObjects = objects;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
         nome = getItem(position).getNome();
 
         crimes = getItem(position).getCrimes();
@@ -45,19 +52,24 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         imageSus = getItem(position).getFotoDoSuspeito();
 
         peri = getItem(position).getPericulosidade();
+
         idade = getItem(position).getIdadeDoSuspeito();
+
         final Double localizacao[] = getItem(position).getLocalizacao();
 
         Suspeito DadosHist = new Suspeito(nome,idade , crimes, peri, imageSus, localizacao[0], localizacao[1]);
 
-        LayoutInflater inflater = LayoutInflater.from(nContext);
-        convertView = inflater.inflate(nResource, parent, false);
+        if (convertView == null){
+            LayoutInflater inflater = LayoutInflater.from(nContext);
+            convertView = inflater.inflate(nResource, parent, false);
+        }
+
 
         Button bMapa = convertView.findViewById(R.id.bMapsHist);
-        TextView tvNome = convertView.findViewById(R.id.textNome);
-        TextView tvCrime = convertView.findViewById(R.id.textCrime);
+        TextView tvNome = convertView.findViewById(R.id.layTextNome);
+        TextView tvCrime = convertView.findViewById(R.id.layTextCrime);
         ImageButton ivSus = convertView.findViewById(R.id.imageSus);
-
+        ListView listView = convertView.findViewById(R.id.histList);
 
 
         bMapa.setOnClickListener(new View.OnClickListener() {
@@ -72,17 +84,36 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         });
 
         tvNome.setText(nome);
-        tvCrime.setText(crimes[0]);
-        ivSus.setImageBitmap(imageSus);
+        for (String c : crimes){
+            if (c != null) crimesS += c + ", ";
+        }
+        crimesS += "!";
+        crimesS = crimesS.replace(", !","");
+        crimesS = crimesS.replace(", , ","!!");
+        crimesS = crimesS.replace(" , ","");
+        crimesS = crimesS.replace("!!",", ");
 
+        tvCrime.setText(crimesS);
+        ivSus.setImageBitmap(imageSus);
+        Log.d("1111111111111111" , nome + "//" + crimes + "//" + idade);
+
+        ivSus.setTag(position);
         ivSus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view ) {
                 Intent intent = new Intent(nContext, perfil.class);
+                int position = (Integer) view.getTag();
                 Bundle b = new Bundle();
+                Log.d("9999999999999999" , nome + "//" + crimes + "//" + idade);
+                String nome = getItem(position).getNome();
+                String[] crimes = getItem(position).getCrimes();
+                Bitmap imageSus = getItem(position).getFotoDoSuspeito();
+                String peri = getItem(position).getPericulosidade();
+                int idade  = getItem(position).getIdadeDoSuspeito();
                 b.putString("name", nome);
                 b.putStringArray("crimes", crimes);
                 b.putString("dangerLevel", peri);
+                b.putString("age", Integer.toString(idade));
 				intent.putExtra("face", imageSus);
 				intent.putExtras(b);
                 nContext.startActivity(intent);
