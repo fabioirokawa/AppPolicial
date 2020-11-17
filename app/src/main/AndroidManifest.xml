@@ -26,16 +26,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
 		android:allowBackup="false">
-		<activity android:name=".formulario" />
+		<activity android:name=".FormularioActivity" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDnqj8Oi9Gnox5bryzT0UhmUYRwGHOudBM" />
 
-        <activity android:name=".historico" />
-        <activity android:name=".perfil" />
+        <activity android:name=".HistoricoActivity" />
+        <activity android:name=".PerfilActivity" />
         <activity android:name=".LocalMaps" />
-        <activity android:name=".camera">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

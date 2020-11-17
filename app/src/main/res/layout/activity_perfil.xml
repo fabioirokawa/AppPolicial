@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sampa_background1"
-    tools:context=".perfil">
+    tools:context=".PerfilActivity">
 
     <ImageView
         android:id="@+id/perfilView"
@@ -18,7 +18,8 @@
         app:layout_constraintEnd_toEndOf="@id/dadosPerfil"
         app:layout_constraintStart_toStartOf="@id/tSuspeitoNome"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+		android:contentDescription="@string/foto_do_suspeito"
+		/>
 
     <TextView
         android:id="@+id/tSuspeitoNome"
@@ -27,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Perfil do Suspeito"
+        android:text="@string/perfil_do_suspeito"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +58,7 @@
 			android:layout_height="wrap_content"
 			android:background="@drawable/perfil_back_1"
 			android:gravity="center"
-			android:text="Nome"
+			android:text="@string/nome"
 			android:textSize="24sp" />
 
 		<TextView
@@ -76,7 +77,7 @@
 			android:layout_height="wrap_content"
 			android:background="@drawable/perfil_back_1"
 			android:gravity="center"
-			android:text="Idade"
+			android:text="@string/idade"
 			android:textSize="24sp" />
 
 		<TextView
@@ -94,7 +95,7 @@
 			android:layout_height="wrap_content"
 			android:background="@drawable/perfil_back_1"
 			android:gravity="center"
-			android:text="Crimes Cometidos"
+			android:text="@string/crimes"
 			android:textSize="24sp" />
 
 		<TextView
@@ -112,7 +113,7 @@
 			android:layout_height="wrap_content"
 			android:background="@drawable/perfil_back_1"
 			android:gravity="center"
-			android:text="Nivel de Perigo"
+			android:text="@string/nivel_de_perigo"
 			android:textSize="24sp" />
 
 		<TextView

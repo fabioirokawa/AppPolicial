@@ -3,7 +3,6 @@ package com.example.apppolicial;
 import android.graphics.Bitmap;
 
 
-
 public class Suspeito {
 
     private Bitmap fotoDoSuspeito;

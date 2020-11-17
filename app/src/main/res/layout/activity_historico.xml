@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sampa_background1"
-    tools:context=".historico">
+    tools:context=".HistoricoActivity">
 
     <Button
         android:id="@+id/maps"
@@ -19,15 +19,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.029" />
 
-    <ListView
+
+	<TextView
+		android:id="@+id/titleHistory"
+		android:layout_width="wrap_content"
+		android:layout_height="48dp"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="16dp"
+		android:gravity="center"
+		android:text="@string/historico"
+		android:textSize="30sp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<ListView
         android:id="@+id/histList"
-        android:layout_width="308dp"
-        android:layout_height="636dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:layout_marginTop="80dp"
+		android:layout_marginStart="10dp"
+		android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.705" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+	</ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

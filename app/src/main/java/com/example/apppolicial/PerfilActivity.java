@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class perfil extends AppCompatActivity {
+public class PerfilActivity extends AppCompatActivity {
 
 
 

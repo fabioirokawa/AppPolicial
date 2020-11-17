@@ -1,3 +1,15 @@
 <resources>
-    <string name="hello_world">Hello Round World!</string>
+	<string name="main_title">Scanning</string>
+	<string name="Maps">Maps</string>
+	<string name="title_activity_formulario">formulario</string>
+
+
+	<string name="historico">Historico</string>
+	<string name="perfil">Perfil</string>
+	<string name="nome">Nome</string>
+	<string name="cadastrar_novo">Novo cadastro</string>
+	<string name="carregar_foto">Carregar Foto</string>
+	<string name="tirar_foto">Tirar foto</string>
+
+
 </resources>

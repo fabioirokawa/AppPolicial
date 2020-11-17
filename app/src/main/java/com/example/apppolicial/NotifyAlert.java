@@ -15,7 +15,6 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class NotifyAlert extends Application {
 	public static final String CHANNEL_1_ID = "channel1";
-	public static final String CHANNEL_2_ID = "channel2";
 
     private NotificationManagerCompat notificationManager;
 
@@ -31,23 +30,16 @@ public class NotifyAlert extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
-                    "channel1",
+                    getString(R.string.notification_suspect),
                     NotificationManager.IMPORTANCE_HIGH
             );
-			channel2 = new NotificationChannel(
-					CHANNEL_2_ID,
-					"channel1",
-					NotificationManager.IMPORTANCE_DEFAULT
-			);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			channel1.setDescription("this is Channel 1");
-			channel2.setDescription("this is Channel 2");
+			channel1.setDescription(String.valueOf(R.string.notification_suspect));
         }
         NotificationManager manager = getSystemService(NotificationManager.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			manager.createNotificationChannel(channel1);
-			manager.createNotificationChannel(channel2);
         }
     }
 

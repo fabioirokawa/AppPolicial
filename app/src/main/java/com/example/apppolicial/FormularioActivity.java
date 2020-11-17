@@ -34,7 +34,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
-public class formulario extends AppCompatActivity {
+public class FormularioActivity extends AppCompatActivity {
 
 	private EditText crime;
 	private AutoCompleteTextView peri;
@@ -42,7 +42,7 @@ public class formulario extends AppCompatActivity {
 	private EditText age;
 	private Bitmap dBitmap = null;
 
-	private NotifyAlert na = new NotifyAlert();
+	private final NotifyAlert na = new NotifyAlert();
 	private AlertDialog sendDialog;
 	private Thread sendTread;
 
@@ -59,14 +59,8 @@ public class formulario extends AppCompatActivity {
 		crime = findViewById(R.id.formCrime);
 		peri = findViewById(R.id.formPeri);
 
-		String[] perigo = new String[]{"Baixo", "Medio", "Alto","Nivel de perigo"};
-		ArrayAdapter<String>  adapter = new ArrayAdapter<String>(this, R.layout.list_item,perigo){
-			@Override
-			public int getCount() {
-				return super.getCount()-1;
-			}
-		};
-		peri.setText(perigo[3],false);
+		String[] perigo = new String[]{"Baixo", "Medio", "Alto"};
+		ArrayAdapter<String>  adapter = new ArrayAdapter<>(this, R.layout.list_item, perigo);
 		peri.setAdapter(adapter);
 		Button buttonPegaFoto = findViewById(R.id.bPegaFoto);
 		Button buttonTakePhoto = findViewById(R.id.bTakePhoto);
@@ -107,29 +101,34 @@ public class formulario extends AppCompatActivity {
 	private void enviaNovoCadastro() {
 		//perform verifications
 
+		int errCount=0;
+
 		if (name.getText().toString().isEmpty()) {
 			name.setError("Preencha todos os dados");
-
+			errCount++;
 		}
 		if (crime.getText().toString().isEmpty()) {
 			crime.setError("Preencha todos os dados");
-
-			return;
+			errCount++;
 		}
 		if (crime.getText().toString().isEmpty()) {
 			crime.setError("Preencha todos os dados");
-			return;
+			errCount++;
 		}
 		if(age.getText().toString().isEmpty()) {
 			age.setError("Preencha todos os dados");
-			return;
+			errCount++;
 		}
-		if(peri.getText().toString().equals("Nivel de perigo")){
+		if(peri.getText().toString().isEmpty()){
 			peri.setError("Preencha todos os dados");
-			return;
+			errCount++;
 		}
 		if(dBitmap == null){
 			Snackbar.make(findViewById(R.id.confirma_envio),"Defina uma foto", Snackbar.LENGTH_LONG).show();
+			errCount++;
+		}
+
+		if(errCount > 0){
 			return;
 		}
 
@@ -208,7 +207,7 @@ public class formulario extends AppCompatActivity {
 				}
 				String texto = (byteArray.length + "/" + tCrime + "/" + dados.getPericulosidade() + "/" + dados.getNome()+"/"+ dados.getIdadeDoSuspeito() + "&") ;
 
-				na.progressNotification(formulario.this,"Enviando dados","Aguarde...");
+				na.progressNotification(FormularioActivity.this,"Enviando dados","Aguarde...");
 				OutputStream outputStream = socket.getOutputStream();
 				outputStream.write(texto.getBytes(StandardCharsets.UTF_8));
 
@@ -223,23 +222,23 @@ public class formulario extends AppCompatActivity {
 				out.flush();
 				outputStream.flush();
 
-				na.cancelNotification(formulario.this,2);
+				na.cancelNotification(FormularioActivity.this,2);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						sendDialog.dismiss();
 					}
 				});
-				na.alertNotification(formulario.this,"Finalizado","Dados enviados");
+				na.alertNotification(FormularioActivity.this,"Finalizado","Dados enviados");
 
 			}
 			catch (UnknownHostException | SocketTimeoutException e){
-				na.cancelNotification(formulario.this,2);
-				na.errorNotification(formulario.this,"ERRO","Falha ao enviar");
+				na.cancelNotification(FormularioActivity.this,2);
+				na.errorNotification(FormularioActivity.this,"ERRO","Falha ao enviar");
 			}catch (IOException e) {
 				e.printStackTrace();
-				na.cancelNotification(formulario.this,2);
-				na.errorNotification(formulario.this,"ERRO","Falha ao enviar");
+				na.cancelNotification(FormularioActivity.this,2);
+				na.errorNotification(FormularioActivity.this,"ERRO","Falha ao enviar");
 			}
 			finally {
 				runOnUiThread(new Runnable() {

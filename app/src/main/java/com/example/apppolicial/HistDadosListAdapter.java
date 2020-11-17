@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,9 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
     String peri;
     int idade;
     String crimesS = "";
-    ListView listview;
+    // --Commented out by Inspection (17/11/20 13:29):ListView listview;
 
-    Double[] latlong = new Double[2];
+    // --Commented out by Inspection (17/11/20 13:29):Double[] latlong = new Double[2];
 
     public HistDadosListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Suspeito> objects) {
         super(context, resource, objects);
@@ -55,7 +54,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
         idade = getItem(position).getIdadeDoSuspeito();
 
-        final Double localizacao[] = getItem(position).getLocalizacao();
+        final Double[] localizacao = getItem(position).getLocalizacao();
 
         Suspeito DadosHist = new Suspeito(nome,idade , crimes, peri, imageSus, localizacao[0], localizacao[1]);
 
@@ -95,16 +94,14 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
 
         tvCrime.setText(crimesS);
         ivSus.setImageBitmap(imageSus);
-        Log.d("1111111111111111" , nome + "//" + crimes + "//" + idade);
 
         ivSus.setTag(position);
         ivSus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view ) {
-                Intent intent = new Intent(nContext, perfil.class);
+                Intent intent = new Intent(nContext, PerfilActivity.class);
                 int position = (Integer) view.getTag();
                 Bundle b = new Bundle();
-                Log.d("9999999999999999" , nome + "//" + crimes + "//" + idade);
                 String nome = getItem(position).getNome();
                 String[] crimes = getItem(position).getCrimes();
                 Bitmap imageSus = getItem(position).getFotoDoSuspeito();

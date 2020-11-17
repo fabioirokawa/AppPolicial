@@ -36,7 +36,7 @@ public class ObtemLocal extends AppCompatActivity {
 			}
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
-			Log.d("TAG", String.valueOf(latitude)+","+ longitude);
+			Log.d("TAG", latitude +","+ longitude);
 
 		}
         return new Double[]{latitude, longitude};

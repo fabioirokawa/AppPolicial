@@ -20,7 +20,7 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 
-public class historico extends AppCompatActivity {
+public class HistoricoActivity extends AppCompatActivity {
 	int i = 0;
 	static String anteriorTemp = "";
 	static Suspeito[] suspeitos = new Suspeito[10];

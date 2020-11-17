@@ -1,24 +1,32 @@
 <resources>
-    <string name="app_name">AppPolicial</string>
+    <string name="app_name">CopEye</string>
 
-
-    <!--	MAIN -->
-    <string name="match_in_dataset_image_view_descriptor">Match in dataset</string>
-    <string name="face_crop_image_view_descriptor">Face crop</string>
-    <string name="frame_retrieved_main_image_view_descriptor">Frame retrieved</string>
-
-    <string name="accuracy_main">Accuracy:</string>
-    <string name="name_main">Name:</string>
-
-    <string name="history_title">History</string>
     <string name="main_title">Scanning</string>
     <string name="Maps">Maps</string>
     <string name="title_activity_formulario">formulario</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
 
-    <!--	END MAIN-->
+
+	<string name="historico">Historico</string>
+	<string name="perfil">Perfil</string>
+	<string name="nome">Nome</string>
+	<string name="acuracia">Acurácia</string>
+	<string name="cadastrar_novo">Novo cadastro</string>
+	<string name="carregar_foto">Carregar Foto</string>
+	<string name="tirar_foto">Tirar foto</string>
+	<string name="idade">Idade</string>
+	<string name="crime">Crime</string>
+	<string name="cancelar">Cancelar</string>
+	<string name="cadastrar">Cadastrar</string>
+	<string name="perfil_do_suspeito">Perfil do Suspeito</string>
+	<string name="crimes">Crimes</string>
+	<string name="nivel_de_perigo">Nivel de Perigo</string>
+	<string name="mapa">Ver no mapa</string>
+	<string name="enviando_dados_ao_aparelho">Enviando dados ao aparelho…</string>
+	<string name="foto_do_suspeito">Foto do suspeito</string>
+	<string name="rosto_do_suspeito">Rosto do suspeito</string>
+	<string name="rosto_comparado">Rosto comparado</string>
+	<string name="frame_recebido">Frame recebido</string>
+	<string name="notification_suspect">Notificação geral</string>
+
+
 </resources>

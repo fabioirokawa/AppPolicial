@@ -1,35 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/sampa_background1"
-    tools:context=".MainActivity">
+<?xml version = "1.0" encoding = "utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background="@drawable/sampa_background1"
+	>
 
-    <Button
-        android:id="@+id/bCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/botao"
-        android:text="Câmera"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bHistorico"
-        app:layout_constraintHorizontal_bias="0.474"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
 
-    <Button
-        android:id="@+id/bHistorico"
-        android:background="@drawable/botao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
-        android:text="Histórico"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+	<ImageView
+		android:id="@+id/imageFrame"
+		android:layout_width="match_parent"
+		android:layout_height="273dp"
+		android:layout_marginTop="72dp"
+		android:layout_marginStart="16dp"
+		android:layout_marginEnd="16dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:contentDescription="@string/frame_recebido"/>
 
+
+	<ImageView
+		android:id="@+id/imageFaceCrop"
+		android:layout_width="200dp"
+		android:layout_height="200dp"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="16dp"
+		android:contentDescription="@string/rosto_do_suspeito"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/imageFrame" />
+
+	<ImageView
+		android:id="@+id/imageMatchDataset"
+		android:layout_width="200dp"
+		android:layout_height="200dp"
+		android:layout_marginTop="16dp"
+		android:layout_marginEnd="16dp"
+		android:contentDescription="@string/rosto_comparado"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/imageFrame" />
+
+	<Button
+		android:id="@+id/botaoHistorico"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/botao"
+		android:text="@string/historico"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.977"
+		app:layout_constraintStart_toEndOf="@+id/textViewNameOfSuspectMain"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.847" />
+
+	<Button
+		android:id="@+id/botaoPerfil"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/botao"
+		android:text="@string/perfil"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.978"
+		app:layout_constraintStart_toEndOf="@+id/textViewAccuracyMain"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.954" />
+
+	<TextView
+		android:id="@+id/textViewNameOfSuspectMain"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="4dp"
+		android:text="@string/nome"
+		android:textColor="#000000"
+		android:textSize="24sp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.839" />
+
+	<TextView
+		android:id="@+id/textViewAccuracyMain"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="4dp"
+		android:layout_marginBottom="40dp"
+		android:text="@string/acuracia"
+		android:textColor="#040303"
+		android:textSize="24sp"
+		android:typeface="normal"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+
+	<Button
+		android:id="@+id/formula"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:background="@drawable/botao"
+		android:text="@string/cadastrar_novo"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

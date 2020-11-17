@@ -29,7 +29,8 @@ public class LocalMaps  extends AppCompatActivity implements OnMapReadyCallback 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-        mapFragment.getMapAsync(this);
+		assert mapFragment != null;
+		mapFragment.getMapAsync(this);
     }
 
     /**
