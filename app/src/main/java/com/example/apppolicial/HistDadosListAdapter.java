@@ -27,7 +27,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
     String nome;
     String[] crimes;
     String peri;
-    int idade;
+    String idade;
     String crimesS = "";
     // --Commented out by Inspection (17/11/20 13:29):ListView listview;
 
@@ -106,11 +106,11 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
                 String[] crimes = getItem(position).getCrimes();
                 Bitmap imageSus = getItem(position).getFotoDoSuspeito();
                 String peri = getItem(position).getPericulosidade();
-                int idade  = getItem(position).getIdadeDoSuspeito();
+                String idade  = getItem(position).getIdadeDoSuspeito();
                 b.putString("name", nome);
                 b.putStringArray("crimes", crimes);
                 b.putString("dangerLevel", peri);
-                b.putString("age", Integer.toString(idade));
+                b.putString("age", idade);
 				intent.putExtra("face", imageSus);
 				intent.putExtras(b);
                 nContext.startActivity(intent);

@@ -134,7 +134,7 @@ public class FormularioActivity extends AppCompatActivity {
 
 		//TODO make an interface to collect all crimes, and make a list
 		String[] crimes = new String[]{crime.getText().toString()};
-		Suspeito cadastro = new Suspeito(name.getText().toString(), Integer.parseInt(age.getText().toString()), crimes, peri.getText().toString(), dBitmap, 0.0, 0.0);
+		Suspeito cadastro = new Suspeito(name.getText().toString(), age.getText().toString(), crimes, peri.getText().toString(), dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
 		sendTread.start();
 	}

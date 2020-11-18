@@ -27,6 +27,7 @@
 	<string name="rosto_comparado">Rosto comparado</string>
 	<string name="frame_recebido">Frame recebido</string>
 	<string name="notification_suspect">Notificação geral</string>
+    <string name="limpar">Limpar</string>
 
 
 </resources>

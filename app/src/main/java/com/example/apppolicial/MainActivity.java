@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.apppolicial.room.*;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +35,8 @@ import java.io.InputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements android.location.LocationListener{
 	private final int ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE = 1;
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements android.location.
 	private String dTextName = "";
 	private Bitmap dBitmap;
 	private Thread clientThread;
+	private DetectionDao database;
+
 	private Bitmap hRostoSuspeito;
 	private String nomeDoSuspeito;
 	private String idadeDoSuspeito;
@@ -109,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements android.location.
 		if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
 			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
 			startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+		}else{
+			getLocalizacao();
+			Thread myThread = new Thread(new MyServer(this));
+			myThread.start();//Inicia thread de conexão via socket
+
 		}
 	}
 
@@ -187,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements android.location.
 				error=true;
 			}
 
+            database = CopEyeDatabase.getInstance(context).dataDao();
+
 			while (!error){
 				try{
 
@@ -204,6 +217,9 @@ public class MainActivity extends AppCompatActivity implements android.location.
 						message = message.substring(0, message.indexOf("\0"));
 						Log.i("[INFO]", "Bytes content: " + message);
 
+
+
+
 						mensagemSeparada = message.split("\n");
 						handler.post(new Runnable() {
 							@Override
@@ -219,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements android.location.
 						probabilidadeDoSuspeito = mensagemSeparada[5];
 
 						File mydir = context.getDir(nomeDoSuspeito, Context.MODE_PRIVATE);
+
 						String timestampNome = nomeDoSuspeito + horaDeteccaoSuspeito;
 						pathFrame = new File(mydir, timestampNome + ".bmp");
 						pathFaceCrop = new File(mydir, timestampNome+ "_face_crop.bmp");
@@ -270,6 +287,16 @@ public class MainActivity extends AppCompatActivity implements android.location.
 							textViewName.setText(String.format("%s: %s", getString(R.string.nome), nomeDoSuspeito));
 							TextView textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracyMain);
 							textViewAccuracy.setText(String.format("%s: %s", getString(R.string.acuracia), probabilidadeDoSuspeito));
+
+							Detection d = new Detection(nomeDoSuspeito,idadeDoSuspeito,probabilidadeDoSuspeito,
+									horaDeteccaoSuspeito,nivelPerigoDoSuspeito,
+									BitmapFactory.decodeFile(String.valueOf(pathFrame)),
+									BitmapFactory.decodeFile(String.valueOf(pathFaceCrop)),
+									BitmapFactory.decodeFile(String.valueOf(pathMatchDataset)),
+									new ArrayList<>(Arrays.asList(listaDeCrimesDoSuspeito)),latitude,longitude);
+							if(d.imagem_frame != null || d.imagem_dataset != null || d.imagem_crop != null){
+								database.insertAll(d);
+							}
 							buttonProfile.setVisibility(View.VISIBLE);
 
 						}
