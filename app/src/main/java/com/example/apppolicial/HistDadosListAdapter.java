@@ -71,6 +71,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         ListView listView = convertView.findViewById(R.id.histList);
 
 
+        bMapa.setTag(position);
         bMapa.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -78,9 +79,13 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
                 Intent intent = new Intent(nContext, LocalMaps.class);
                 intent.putExtra("Latitude", localizacao[0]);
                 intent.putExtra("Longitude", localizacao[1]);
+
+                int pos = (Integer) view.getTag();
+                intent.putExtra("id",getItem(pos).getSuspeito_id());
                 nContext.startActivity(intent);
             }
         });
+		crimesS="";
 
         tvNome.setText(nome);
         for (String c : crimes){
@@ -102,17 +107,9 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
                 Intent intent = new Intent(nContext, PerfilActivity.class);
                 int position = (Integer) view.getTag();
                 Bundle b = new Bundle();
-                String nome = getItem(position).getNome();
-                String[] crimes = getItem(position).getCrimes();
-                Bitmap imageSus = getItem(position).getFotoDoSuspeito();
-                String peri = getItem(position).getPericulosidade();
-                String idade  = getItem(position).getIdadeDoSuspeito();
-                b.putString("name", nome);
-                b.putStringArray("crimes", crimes);
-                b.putString("dangerLevel", peri);
-                b.putString("age", idade);
-				intent.putExtra("face", imageSus);
-				intent.putExtras(b);
+                int suspeito_id = getItem(position).getSuspeito_id();
+                b.putInt("id",suspeito_id);
+                intent.putExtras(b);
                 nContext.startActivity(intent);
             }
         });

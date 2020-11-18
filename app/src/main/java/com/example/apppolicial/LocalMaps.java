@@ -10,18 +10,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LocalMaps  extends AppCompatActivity implements OnMapReadyCallback {
 
     double latitude, longitude;
-
+	int s_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("Latitude", 0);
         longitude = intent.getDoubleExtra("Longitude", 0);
+		s_id = intent.getIntExtra("id",-99);
 
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
@@ -47,6 +49,21 @@ public class LocalMaps  extends AppCompatActivity implements OnMapReadyCallback 
         //Adicionando um alfinete na latitude e longitude informadas
         LatLng alfinete = new LatLng(latitude, longitude);
         googleMap.addMarker(new MarkerOptions().position(alfinete).title("Suspeito"));
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+
+				if(s_id != -99) {
+					Intent intent = new Intent(LocalMaps.this, PerfilActivity.class);
+					Bundle b = new Bundle();
+					b.putInt("id", s_id);
+					intent.putExtras(b);
+					startActivity(intent);
+				}
+				finish();
+				return false;
+			}
+		});
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(alfinete, 13));
     }
 }

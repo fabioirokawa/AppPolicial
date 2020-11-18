@@ -12,6 +12,7 @@ public class Suspeito {
     private String periculosidade="";
     private double latitude;
     private double longitude;
+    private int suspeito_id;
 
 
     public Suspeito(String nome, String idade,String[] crimes,String periculosidade, Bitmap imgSus, double latitude, double longitude) {
@@ -45,5 +46,13 @@ public class Suspeito {
 
 	public String getIdadeDoSuspeito() {
 		return idadeDoSuspeito;
+	}
+
+	public int getSuspeito_id() {
+		return suspeito_id;
+	}
+
+	public void setSuspeito_id(int suspeito_id) {
+		this.suspeito_id = suspeito_id;
 	}
 }

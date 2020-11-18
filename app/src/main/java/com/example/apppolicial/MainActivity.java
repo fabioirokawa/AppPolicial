@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements android.location.
 		Button buttonHistory = findViewById(R.id.botaoHistorico);
 		Button buttonForm = findViewById(R.id.formula);
 
+
+
 		buttonForm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -130,17 +132,6 @@ public class MainActivity extends AppCompatActivity implements android.location.
 
 	public void goToHist(){
 		Intent intent = new Intent (this, HistoricoActivity.class);
-		Bundle b = new Bundle();
-		b.putString("name", nomeDoSuspeito);
-		intent.putExtra("face", hRostoSuspeito);
-		b.putString("probability", probabilidadeDoSuspeito);
-		b.putString("time", horaDeteccaoSuspeito);
-		b.putString("age", idadeDoSuspeito);
-		b.putString("dangerLevel", nivelPerigoDoSuspeito);
-		double[] locations = {latitude, longitude};
-		b.putDoubleArray("locations",locations);
-		b.putStringArray("crimes", listaDeCrimesDoSuspeito);
-		intent.putExtras(b);
 		startActivity(intent);
 	}
 
@@ -198,7 +189,14 @@ public class MainActivity extends AppCompatActivity implements android.location.
 				error=true;
 			}
 
-            database = CopEyeDatabase.getInstance(context).dataDao();
+			database = CopEyeDatabase.getInstance(context).dataDao();
+
+
+//            Bitmap btmp = null;
+//
+//            Detection ddd = new Detection("Fulano","22","15%","hora","Alto",
+//					btmp,btmp,btmp,new ArrayList<>(Arrays.asList("crime","crime2")),0,0);
+//			database.insertAll(ddd);
 
 			while (!error){
 				try{
