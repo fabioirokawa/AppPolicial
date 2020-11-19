@@ -40,11 +40,18 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/bMapsHist"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:text="@string/mapa" />
+
+	<ImageButton
+		android:id="@+id/bMapsHist"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:src="@drawable/ic_location_on_24px"
+		android:contentDescription="@string/mapa"
+		android:layout_margin="16dp"
+		android:background="@color/cinza_claro_perfil"
+
+		/>
+
+
 
 </LinearLayout>

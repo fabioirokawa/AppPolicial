@@ -2,11 +2,13 @@ package com.example.apppolicial;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.apppolicial.room.*;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -69,13 +72,21 @@ public class MainActivity extends AppCompatActivity implements android.location.
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1){
 			if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
-				Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
-				startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
-
+				new AlertDialog.Builder(this)
+						.setTitle("Por favor ative os serviços de localização")
+						.setPositiveButton("Ativar localização",new AlertDialog.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+							}
+						}).setIcon(R.drawable.ic_location_on_24px)
+				.setCancelable(false)
+				.show();
+			}else {
+				getLocalizacao();
+				Thread myThread = new Thread(new MyServer(this));
+				myThread.start();//Inicia thread de conexão via socket
 			}
-			getLocalizacao();
-			Thread myThread = new Thread(new MyServer(this));
-			myThread.start();//Inicia thread de conexão via socket
 		}
 	}
 
@@ -114,9 +125,18 @@ public class MainActivity extends AppCompatActivity implements android.location.
 			}
 		});
 		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
 		if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
-			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
-			startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+			new AlertDialog.Builder(this)
+					.setTitle("Por favor ative os serviços de localização")
+					.setPositiveButton("Ativar localização",new AlertDialog.OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+						}
+					}).setIcon(R.drawable.ic_location_on_24px)
+					.setCancelable(false)
+					.show();
 		}else{
 			getLocalizacao();
 			Thread myThread = new Thread(new MyServer(this));
@@ -178,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements android.location.
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(getApplicationContext(), "Aguardando Conexao", Toast.LENGTH_LONG).show();
+						Snackbar.make(findViewById(R.id.botaoHistorico),"Aguardando conexão",Snackbar.LENGTH_LONG).show();
+
 					}
 				});//Acessa thread principal para exibir mensagem flutuante
 			}catch (BindException ex){
@@ -192,11 +213,11 @@ public class MainActivity extends AppCompatActivity implements android.location.
 			database = CopEyeDatabase.getInstance(context).dataDao();
 
 
-//            Bitmap btmp = null;
-//
-//            Detection ddd = new Detection("Fulano","22","15%","hora","Alto",
-//					btmp,btmp,btmp,new ArrayList<>(Arrays.asList("crime","crime2")),0,0);
-//			database.insertAll(ddd);
+            Bitmap btmp = null;
+
+            Detection ddd = new Detection("Fulano","22","15%","hora","Alto",
+					btmp,btmp,btmp,new ArrayList<>(Arrays.asList("crime","crime2")),0,0);
+			database.insertAll(ddd);
 
 			while (!error){
 				try{
@@ -348,8 +369,16 @@ public class MainActivity extends AppCompatActivity implements android.location.
 			return;
 		}
 		if(!isGPSEnabled){
-			Toast.makeText(this, "Por favor ative os serviços de localização",Toast.LENGTH_LONG).show();
-			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			new AlertDialog.Builder(this)
+					.setTitle("Por favor ative os serviços de localização")
+					.setPositiveButton("Ativar localização",new AlertDialog.OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+						}
+					}).setIcon(R.drawable.ic_location_on_24px)
+					.setCancelable(false)
+					.show();
 		}else {
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 			Location local = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);

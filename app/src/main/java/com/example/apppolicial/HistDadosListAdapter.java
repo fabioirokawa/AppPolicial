@@ -64,7 +64,7 @@ public class HistDadosListAdapter extends ArrayAdapter<Suspeito> {
         }
 
 
-        Button bMapa = convertView.findViewById(R.id.bMapsHist);
+        ImageButton bMapa = convertView.findViewById(R.id.bMapsHist);
         TextView tvNome = convertView.findViewById(R.id.layTextNome);
         TextView tvCrime = convertView.findViewById(R.id.layTextCrime);
         ImageButton ivSus = convertView.findViewById(R.id.imageSus);
