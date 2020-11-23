@@ -60,9 +60,7 @@
 		app:layout_constraintTop_toBottomOf="@id/imageFaceCrop"
 		android:layout_width="match_parent"
 		app:layout_constraintBottom_toBottomOf="parent"
-		android:background="@drawable/backcard"
-
-		>
+		android:background="@drawable/backcard">
 
 
 		<Button
@@ -83,9 +81,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="1dp"
+			android:layout_marginTop="16dp"
 			android:layout_marginBottom="48dp"
 			android:background="@drawable/botao"
 			android:text="@string/perfil"
+			app:layout_constraintTop_toBottomOf="@id/botaoHistorico"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent" />
 

@@ -41,9 +41,11 @@ public class FormularioActivity extends AppCompatActivity {
 	private EditText name;
 	private EditText age;
 	private Bitmap dBitmap = null;
+	private boolean sendStatus = false;
 
 	private final NotifyAlert na = new NotifyAlert();
 	private AlertDialog sendDialog;
+	private AlertDialog errorDialog;
 	private Thread sendTread;
 
 	static final int REQUEST_PHOTO_FROM_STORAGE = 1;
@@ -53,7 +55,8 @@ public class FormularioActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_formulario);
 		final Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().toString() + "/policeDir/");
-		sendDialog = new AlertDialog.Builder(this).setTitle("Enviando").setView(R.layout.my_dialog).setCancelable(false).create();
+		sendDialog = new AlertDialog.Builder(this).setTitle(R.string.sending).setView(R.layout.my_dialog).setCancelable(false).create();
+		errorDialog = new AlertDialog.Builder(this).setTitle(R.string.failed2send).setIcon(R.drawable.ic_baseline_error_24).setMessage(R.string.try_again).create();
 		name = findViewById(R.id.formName);
 		age = findViewById(R.id.formAge);
 		crime = findViewById(R.id.formCrime);
@@ -84,7 +87,7 @@ public class FormularioActivity extends AppCompatActivity {
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				//intent.setType("download/*");
 				intent.setDataAndType(selectedUri, "image/*");
-				startActivityForResult(Intent.createChooser(intent, "Selecione imagem"), REQUEST_PHOTO_FROM_STORAGE);
+				startActivityForResult(Intent.createChooser(intent, getString(R.string.select_face)), REQUEST_PHOTO_FROM_STORAGE);
 			}
 		});
 		buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
@@ -104,27 +107,27 @@ public class FormularioActivity extends AppCompatActivity {
 		int errCount=0;
 
 		if (name.getText().toString().isEmpty()) {
-			name.setError("Preencha todos os dados");
+			name.setError(getString(R.string.empty_field));
 			errCount++;
 		}
 		if (crime.getText().toString().isEmpty()) {
-			crime.setError("Preencha todos os dados");
+			crime.setError(getString(R.string.empty_field));
 			errCount++;
 		}
 		if (crime.getText().toString().isEmpty()) {
-			crime.setError("Preencha todos os dados");
+			crime.setError(getString(R.string.empty_field));
 			errCount++;
 		}
 		if(age.getText().toString().isEmpty()) {
-			age.setError("Preencha todos os dados");
+			age.setError(getString(R.string.empty_field));
 			errCount++;
 		}
 		if(peri.getText().toString().isEmpty()){
-			peri.setError("Preencha todos os dados");
+			peri.setError(getString(R.string.empty_field));
 			errCount++;
 		}
 		if(dBitmap == null){
-			Snackbar.make(findViewById(R.id.confirma_envio),"Defina uma foto", Snackbar.LENGTH_LONG).show();
+			Snackbar.make(findViewById(R.id.confirma_envio), R.string.empty_photo, Snackbar.LENGTH_LONG).show();
 			errCount++;
 		}
 
@@ -136,7 +139,18 @@ public class FormularioActivity extends AppCompatActivity {
 		String[] crimes = new String[]{crime.getText().toString()};
 		Suspeito cadastro = new Suspeito(name.getText().toString(), age.getText().toString(), crimes, peri.getText().toString(), dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
+		sendStatus=false;
 		sendTread.start();
+		sendDialog.show();
+		while(sendTread.isAlive()){
+			if(sendTread.isInterrupted()){
+				break;
+			}
+		}
+		sendDialog.dismiss();
+		if(sendStatus){
+			finish();
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -171,7 +185,7 @@ public class FormularioActivity extends AppCompatActivity {
 
 	class ClientThread implements Runnable{
 		Suspeito dados;
-		String SERVER_SOCKET = "192.168.0.18"; //ip maquina
+		String SERVER_SOCKET = "192.168.1.113"; //ip maquina
 		int SERVER_PORT = 5001;
 
 
@@ -182,16 +196,10 @@ public class FormularioActivity extends AppCompatActivity {
 		public void run(){
 			try {
 
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						sendDialog.show();
-					}
-				});
 				InetAddress addr = InetAddress.getByName(SERVER_SOCKET);
 				SocketAddress address= new InetSocketAddress(addr,SERVER_PORT);
 				Socket socket = new Socket();
-				socket.connect(address,5000);
+				socket.connect(address,5001);
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -223,30 +231,31 @@ public class FormularioActivity extends AppCompatActivity {
 				outputStream.flush();
 
 				na.cancelNotification(FormularioActivity.this,2);
+				na.successNotification(FormularioActivity.this,"Finalizado","Dados enviados");
+				sendStatus=true;
+			}
+			catch (UnknownHostException | SocketTimeoutException e){
+				Log.e("ENVIO","Timeout ou Host desconhecido");
+				na.cancelNotification(FormularioActivity.this,2);
+				na.errorNotification(FormularioActivity.this,"ERRO","Falha ao enviar");
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						sendDialog.dismiss();
+						errorDialog.show();
 					}
 				});
-				na.alertNotification(FormularioActivity.this,"Finalizado","Dados enviados");
-
-			}
-			catch (UnknownHostException | SocketTimeoutException e){
-				na.cancelNotification(FormularioActivity.this,2);
-				na.errorNotification(FormularioActivity.this,"ERRO","Falha ao enviar");
 			}catch (IOException e) {
 				e.printStackTrace();
 				na.cancelNotification(FormularioActivity.this,2);
 				na.errorNotification(FormularioActivity.this,"ERRO","Falha ao enviar");
-			}
-			finally {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						sendDialog.dismiss();
+						errorDialog.show();
 					}
 				});
+			}
+			finally {
 				sendTread.interrupt();
 			}
 

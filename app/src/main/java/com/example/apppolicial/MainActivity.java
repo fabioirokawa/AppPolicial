@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,14 +43,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements android.location.LocationListener{
-	private final int ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE = 1;
+	private final int REQUES_MULTIPLE_PERMISSIONS= 1;
+	private final int ASK_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 2;
 
-	private BufferedReader in = null;
-	private String dTextName = "";
-	private Bitmap dBitmap;
-	private Thread clientThread;
 	private DetectionDao database;
-
 	private Bitmap hRostoSuspeito;
 	private String nomeDoSuspeito;
 	private String idadeDoSuspeito;
@@ -77,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements android.location.
 						.setPositiveButton("Ativar localização",new AlertDialog.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+								Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+								startActivityForResult(i,1);
 							}
 						}).setIcon(R.drawable.ic_location_on_24px)
 				.setCancelable(false)
@@ -88,16 +87,70 @@ public class MainActivity extends AppCompatActivity implements android.location.
 				myThread.start();//Inicia thread de conexão via socket
 			}
 		}
+		if (requestCode == 2){
+			ArrayList<String> deniedPermissions = new ArrayList<String>();
+			for (String p : permissions) {
+				if (ActivityCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
+					deniedPermissions.add(p);
+				}
+			}
+			if(deniedPermissions.size() > 0){
+				ActivityCompat.requestPermissions(this, permissions,REQUES_MULTIPLE_PERMISSIONS);
+			}else {
+				Toast.makeText(this, R.string.thanks_permissions, Toast.LENGTH_LONG).show();
+			}
+		}
 	}
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
+
+
+			if (requestCode == REQUES_MULTIPLE_PERMISSIONS) {
+
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					Toast.makeText(this, R.string.thanks_permissions, Toast.LENGTH_LONG).show();
+				} else if(grantResults.length  != 0) {
+					new AlertDialog.Builder(this)
+							.setTitle(R.string.alert_permissions_title)
+							.setCancelable(false)
+							.setMessage(R.string.alert_permissions_description)
+							.setPositiveButton(R.string.see_permissions,new AlertDialog.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+									i.addCategory(Intent.CATEGORY_DEFAULT);
+									i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+									i.setData(Uri.parse("package:"+ getPackageName()));
+									startActivityForResult(i,2);
+								}
+							})
+							.setNegativeButton("OK",new AlertDialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									exitApplication();
+								}
+							})
+							.show();
+				}
+			}
+	}
+
+	void exitApplication() {finish();}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//Verifica se app já tem permissão para gravar arquivos e localização
-		ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
 
-
+		ArrayList<String> deniedPermissions = new ArrayList<String>();
+		for (String p : permissions) {
+			if (ActivityCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
+				deniedPermissions.add(p);
+			}
+		}
+		if(deniedPermissions.size() > 0){
+			ActivityCompat.requestPermissions(this, permissions,REQUES_MULTIPLE_PERMISSIONS);
+		}
 		buttonProfile = findViewById(R.id.botaoPerfil);
 		buttonProfile.setVisibility(View.INVISIBLE);
 
@@ -124,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements android.location.
 				goToHist();
 			}
 		});
+
 		lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if(!(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))){
@@ -132,7 +186,9 @@ public class MainActivity extends AppCompatActivity implements android.location.
 					.setPositiveButton("Ativar localização",new AlertDialog.OnClickListener(){
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+							Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+							startActivityForResult(i,1);
 						}
 					}).setIcon(R.drawable.ic_location_on_24px)
 					.setCancelable(false)
@@ -144,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements android.location.
 
 		}
 	}
+
 
 	public void goToForm(){
 		Intent intent = new Intent (this, FormularioActivity.class);
@@ -402,16 +459,6 @@ public class MainActivity extends AppCompatActivity implements android.location.
 	}
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE)  {
-
-            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                Toast.makeText(this, "Precisamos dessas permissoes!", Toast.LENGTH_SHORT).show();
-				ActivityCompat.requestPermissions(this,permissions , ASK_MULTIPLE_PERMISSIONS_REQUEST_CODE);
-			}
-        }
-    }
 
 
 }

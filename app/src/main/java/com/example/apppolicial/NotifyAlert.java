@@ -49,7 +49,7 @@ public class NotifyAlert extends Application {
         notificationManager = NotificationManagerCompat.from(context);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_one)
+                .setSmallIcon(R.drawable.ic_baseline_person_24)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSound(path)
@@ -61,11 +61,29 @@ public class NotifyAlert extends Application {
         notificationManager.notify(1, notification);
     }
 
+	public void successNotification(Context context,String title,String content){
+		Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		//Uri path =  Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ context.getApplicationContext().getPackageName() + "/" + R.raw.sound);
+		notificationManager = NotificationManagerCompat.from(context);
+
+		Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
+				.setSmallIcon(R.drawable.ic_baseline_check_24)
+				.setContentTitle(title)
+				.setContentText(content)
+				.setSound(path)
+				.setVibrate(new long[] {0, 1000, 500, 1000, 500, 1000})
+				.setPriority(NotificationCompat.PRIORITY_MAX)
+				.setCategory(NotificationCompat.CATEGORY_ALARM)
+				.build();
+
+		notificationManager.notify(1, notification);
+	}
+
     public void progressNotification(Context context,String title,String content){
 		notificationManager = NotificationManagerCompat.from(context);
 
     	Notification notification = new NotificationCompat.Builder(context,CHANNEL_1_ID)
-				.setSmallIcon(R.drawable.ic_launcher_foreground)
+				.setSmallIcon(R.drawable.ic_baseline_arrow_circle_up_24)
 				.setContentTitle(title)
 				.setContentText(content)
 				.setProgress(0,0,true)
@@ -79,8 +97,8 @@ public class NotifyAlert extends Application {
 		notificationManager = NotificationManagerCompat.from(context);
 
 		Notification notification = new NotificationCompat.Builder(context,CHANNEL_1_ID)
-				.setSmallIcon(R.drawable.ic_launcher_foreground)
-				.setContentTitle("ERRO")
+				.setSmallIcon(R.drawable.ic_baseline_error_24)
+				.setContentTitle(title)
 				.setContentTitle(title)
 				.setContentText(content)
 				.setPriority(NotificationCompat.PRIORITY_HIGH)

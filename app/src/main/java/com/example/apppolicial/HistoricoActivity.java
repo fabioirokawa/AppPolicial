@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -34,6 +35,8 @@ public class HistoricoActivity extends AppCompatActivity {
 	private Suspeito[] suspeitos;
 	private HistDadosListAdapter adapter;
 	static ArrayList<Suspeito> histDadosList = new ArrayList<>();
+	TextView counterHistorico;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class HistoricoActivity extends AppCompatActivity {
 
 		adapter = new HistDadosListAdapter(this, R.layout.layout_historico, histDadosList);
 		ListView mListView = findViewById(R.id.histList);
+		counterHistorico = findViewById(R.id.counterHistorico);
 		mListView.setAdapter(adapter);
 
 		updateList();
@@ -82,6 +86,8 @@ public class HistoricoActivity extends AppCompatActivity {
 			i++;
 		}
 
+		String t = getString(R.string.entries_history) + detections.size();
+		counterHistorico.setText(t);
 		histDadosList.addAll(Arrays.asList(suspeitos));
 		adapter.notifyDataSetChanged();
 	}

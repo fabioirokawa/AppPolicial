@@ -1,9 +1,15 @@
 <resources>
-    <string name="app_name">CopEye</string>
+	<string name="app_name">CopEye</string>
+	<string name="app_ver">1.0_alpha</string>
 
-    <string name="main_title">Scanning</string>
-    <string name="Maps">Maps</string>
-    <string name="title_activity_formulario">formulario</string>
+	<string name="thanks_permissions">Obrigado</string>
+	<string name="alert_permissions_title">Não posso continuar</string>
+	<string name="alert_permissions_description">Preciso de todas as permissoes para o correto funcionamento do aplicativo</string>
+	<string name="see_permissions">Ver permissões</string>
+
+	<string name="main_title">Scanning</string>
+	<string name="Maps">Maps</string>
+	<string name="title_activity_formulario">formulario</string>
 
 
 	<string name="historico">Historico</string>
@@ -27,7 +33,14 @@
 	<string name="rosto_comparado">Rosto comparado</string>
 	<string name="frame_recebido">Frame recebido</string>
 	<string name="notification_suspect">Notificação geral</string>
-    <string name="limpar">Limpar</string>
+	<string name="limpar">Limpar</string>
+	<string name="entries_history">Entradas: </string>
+	<string name="sending">Enviando</string>
+	<string name="failed2send">Falha ao enviar</string>
+	<string name="try_again">Tente novamente</string>
+	<string name="select_face">Selecione um rosto</string>
+	<string name="empty_field">Preencha todos os dados</string>
+	<string name="empty_photo">Defina uma foto</string>
 
 
 </resources>
