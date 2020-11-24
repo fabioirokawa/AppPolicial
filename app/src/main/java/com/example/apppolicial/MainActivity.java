@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements android.location.
 			}
 	}
 
-	void exitApplication() {finish();}
+	private void exitApplication() {finish();}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

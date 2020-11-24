@@ -41,7 +41,6 @@ public class FormularioActivity extends AppCompatActivity {
 	private EditText name;
 	private EditText age;
 	private Bitmap dBitmap = null;
-	private boolean sendStatus = false;
 
 	private final NotifyAlert na = new NotifyAlert();
 	private AlertDialog sendDialog;
@@ -139,18 +138,8 @@ public class FormularioActivity extends AppCompatActivity {
 		String[] crimes = new String[]{crime.getText().toString()};
 		Suspeito cadastro = new Suspeito(name.getText().toString(), age.getText().toString(), crimes, peri.getText().toString(), dBitmap, 0.0, 0.0);
 		sendTread = new Thread(new ClientThread(cadastro));
-		sendStatus=false;
 		sendTread.start();
-		sendDialog.show();
-		while(sendTread.isAlive()){
-			if(sendTread.isInterrupted()){
-				break;
-			}
-		}
-		sendDialog.dismiss();
-		if(sendStatus){
-			finish();
-		}
+
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,6 +171,10 @@ public class FormularioActivity extends AppCompatActivity {
 		}
 	}
 
+	 private void exitActivity(){
+			finish();
+	 }
+
 
 	class ClientThread implements Runnable{
 		Suspeito dados;
@@ -190,6 +183,12 @@ public class FormularioActivity extends AppCompatActivity {
 
 
 		ClientThread(Suspeito dados){
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					sendDialog.show();
+				}
+			});
 			this.dados = dados;
 		}
 		@Override
@@ -199,6 +198,8 @@ public class FormularioActivity extends AppCompatActivity {
 				InetAddress addr = InetAddress.getByName(SERVER_SOCKET);
 				SocketAddress address= new InetSocketAddress(addr,SERVER_PORT);
 				Socket socket = new Socket();
+
+
 				socket.connect(address,5001);
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -232,7 +233,7 @@ public class FormularioActivity extends AppCompatActivity {
 
 				na.cancelNotification(FormularioActivity.this,2);
 				na.successNotification(FormularioActivity.this,"Finalizado","Dados enviados");
-				sendStatus=true;
+				exitActivity();
 			}
 			catch (UnknownHostException | SocketTimeoutException e){
 				Log.e("ENVIO","Timeout ou Host desconhecido");
@@ -256,7 +257,14 @@ public class FormularioActivity extends AppCompatActivity {
 				});
 			}
 			finally {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						sendDialog.dismiss();
+					}
+				});
 				sendTread.interrupt();
+
 			}
 
 		}
