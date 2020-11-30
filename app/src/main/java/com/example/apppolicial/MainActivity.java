@@ -41,11 +41,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements android.location.LocationListener{
 	private final int REQUES_MULTIPLE_PERMISSIONS= 1;
 	private final int ASK_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 2;
 
+	private int id_sus;
 	private DetectionDao database;
 	private Bitmap hRostoSuspeito;
 	private String nomeDoSuspeito;
@@ -214,7 +216,9 @@ public class MainActivity extends AppCompatActivity implements android.location.
 
 	public void goToPerf(){
 		Intent intent = new Intent (this, PerfilActivity.class);
+
 		Bundle b = new Bundle();
+		b.putInt("id", id_sus);
 		b.putString("name", nomeDoSuspeito);
 		intent.putExtra("face", hRostoSuspeito);
 		b.putString("probability", probabilidadeDoSuspeito);
@@ -269,13 +273,13 @@ public class MainActivity extends AppCompatActivity implements android.location.
 
 			database = CopEyeDatabase.getInstance(context).dataDao();
 
-
+/*
             Bitmap btmp = null;
 
             Detection ddd = new Detection("Fulano","22","15%","hora","Alto",
 					btmp,btmp,btmp,new ArrayList<>(Arrays.asList("crime","crime2")),0,0);
 			database.insertAll(ddd);
-
+*/
 			while (!error){
 				try{
 
@@ -372,6 +376,8 @@ public class MainActivity extends AppCompatActivity implements android.location.
 									new ArrayList<>(Arrays.asList(listaDeCrimesDoSuspeito)),latitude,longitude);
 							if(d.imagem_frame != null || d.imagem_dataset != null || d.imagem_crop != null){
 								database.insertAll(d);
+								List<Detection> det = database.getAll();
+								id_sus = det.get(det.size()-1).id;
 							}
 							buttonProfile.setVisibility(View.VISIBLE);
 

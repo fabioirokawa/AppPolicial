@@ -29,7 +29,7 @@ public class PerfilActivity extends AppCompatActivity {
 
 		int suspeito_id = intent.getIntExtra("id",-99);
 		if (suspeito_id == -99){
-			finish();
+			this.finish();
 		}
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
@@ -53,7 +53,6 @@ public class PerfilActivity extends AppCompatActivity {
 		idade = d.idade;
 		PPeri = d.nivel_perigo;
 		PFoto = d.imagem_dataset;
-
 
         ImageView ivFoto = findViewById(R.id.perfilView);
 		TextView tvPNome = findViewById(R.id.nomePerfil);
